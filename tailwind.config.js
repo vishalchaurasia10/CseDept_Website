@@ -7,11 +7,19 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      fontFamily: {
+        "jost": ["Jost", "sans-serif"],
+        "roboto": ["Roboto", "sans-serif"],
       },
+      borderColor: {
+        'white': 'rgba(255, 255, 255, 0.2)', // Define the border color
+      },
+      backgroundColor: {
+        'white': 'rgba(255, 255, 255, 0.2)', // Define the border color
+      },
+      animation: {
+        'up-down': 'up-down 1s ease-in-out infinite',
+      }
     },
   },
   plugins: [],
