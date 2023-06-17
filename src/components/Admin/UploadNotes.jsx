@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { FaCloudUploadAlt, FaFilePdf } from 'react-icons/fa';
+import React, { useState } from 'react';
 import { Client, Databases, Storage, ID } from 'appwrite';
-import Button from '../Button';
 import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 const success = (message) => toast.success(message, { duration: 3000 });
@@ -34,14 +31,14 @@ const UploadNotes = () => {
             const storage = new Storage(client);
 
             const result = await storage.createFile(
-                process.env.NEXT_PUBLIC_BUCKET_ID,
+                process.env.NEXT_PUBLIC_NOTES_BUCKET_ID,
                 ID.unique(),
                 file
             );
 
             const fileId = result.$id;
             const uploadedFile = storage.getFileView(
-                process.env.NEXT_PUBLIC_BUCKET_ID,
+                process.env.NEXT_PUBLIC_NOTES_BUCKET_ID,
                 fileId
             );
             setNotesDetails((prevDetails) => ({
@@ -52,7 +49,6 @@ const UploadNotes = () => {
             toast.promise(
                 Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
                 {
-                    loading: 'Uploading document...',
                     success: () => 'Document successfully uploaded!',
                     error: () => 'Error uploading document.',
                     duration: 3000,
@@ -86,7 +82,7 @@ const UploadNotes = () => {
 
             const result = await databases.createDocument(
                 process.env.NEXT_PUBLIC_DATABASE_ID,
-                process.env.NEXT_PUBLIC_COLLECTION_ID,
+                process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID,
                 ID.unique(),
                 {
                     name: notesDetails.name,
@@ -147,8 +143,8 @@ const UploadNotes = () => {
         if (!notesDetails.url) {
             return (
                 <label htmlFor="notesFile">
-                    <Image className=" h-full w-full animate-up-down cursor-pointer" src="/images/upload.svg" width={200} height={200} alt='Upload Image' />
-                    {loading && <Image className='relative mx-auto h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
+                    <Image className=" h-full w-full cursor-pointer" src="/images/upload.svg" width={200} height={200} alt='Upload Image' />
+                    {loading && <Image className='relative mx-auto mb-4 lg:mb-0 h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
                     {/* <FaCloudUploadAlt className="text-[#F02D65] -mt-20 text-[15rem] cursor-pointer" /> */}
                     <input onChange={handleFileUpload} className="hidden" type="file" name="notesFile" id="notesFile" />
                 </label>
@@ -157,7 +153,7 @@ const UploadNotes = () => {
 
         return (
             <div className="preview flex flex-col items-center justify-center mb-8">
-                <Image className=" h-full w-full animate-up-down cursor-pointer" src="/images/uploaded.svg" width={200} height={200} alt='Upload Image' />
+                <Image className=" h-full w-full" src="/images/uploaded.svg" width={200} height={200} alt='Upload Image' />
                 {/* <FaFilePdf className="text-[#F02D65] -mt-10 mb-8 lg:-mt-20 cursor-pointer text-[15rem]" /> */}
                 <Link target='_blank' href={notesDetails.url}>
                     <button className="group relative mt-10 inline-flex items-center justify-center overflow-hidden rounded-md px-8 py-3 font-medium tracking-wide text-white text-xl shadow-2xl border border-slate-100/20 hover:scale-110 transition duration-300 ease-out  hover:shadow-orange-600 active:translate-y-1">
@@ -172,8 +168,8 @@ const UploadNotes = () => {
     return (
         <>
             <Toaster />
-            <div className="wrapper px-2 flex items-center justify-center">
-                <div className="container bg-[#D7D9DD] text-[#262626] font-jost mt-28 w-full rounded-2xl border-2 border-white">
+            <div className="wrapper px-2 lg:px-40 flex items-center justify-center">
+                <div className="container shadow-2xl shadow-black bg-[#D7D9DD] text-[#262626] font-jost mt-28 w-full rounded-2xl border-2 border-white">
                     <div className="content flex flex-col lg:flex-row">
                         <div className="heading lg:hidden block mt-6 px-7 font-bold">
                             <h1 className=" text-5xl lg:text-7xl font-jost">Upload Notes</h1>
@@ -271,7 +267,7 @@ const UploadNotes = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="fileUpload bg-[#262626] rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%] flex items-center justify-center">
+                        <div className="fileUpload bg-[#262626] rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
                             {renderFileUpload()}
                         </div>
                     </div>

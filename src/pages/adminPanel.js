@@ -1,5 +1,5 @@
 
-import AdminPanel from '@/components/AdminPanel'
+import AdminPanel from '@/components/Content/AdminPanel'
 import React from 'react'
 
 const adminPanel = () => {

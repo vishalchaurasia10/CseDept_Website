@@ -1,4 +1,4 @@
-import Navbar from '@/components/Navbar'
+import Navbar from '@/components/Layout/Navbar'
 import '@/styles/globals.css'
 
 export default function App({ Component, pageProps }) {
