@@ -16,9 +16,7 @@ const Navbar = () => {
 
     return (
         <>
-            <motion.nav
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
+            <nav
                 className='z-20 text-white font-jost fixed top-0 left-0 right-0 bg-black flex justify-between items-center px-5 md:px-10 py-4'>
 
                 <div className="left w-1/4 lg:w-full ">
@@ -53,7 +51,7 @@ const Navbar = () => {
                     <div onClick={expandNav} className={`${navExpand ? 'scale-0' : ''} w-6 transition-all duration-300 rounded-full bg-white h-1`}></div>
                     <div onClick={expandNav} className={`${navExpand ? 'rotate-45 -translate-y-2' : ''} w-6 transition-all duration-300 rounded-full bg-white h-1`}></div>
                 </div>
-            </motion.nav >
+            </nav >
 
             <div className={`expanded lg:hidden w-full text-white z-[15] h-screen flex flex-col items-center justify-center backdrop-blur-3xl fixed top-0 transition-all duration-500 ${navExpand ? '' : 'translate-x-[60rem]'}`}>
                 <h1 className={`logo font-jost my-4 font-extrabold text-5xl`}>Msrit<span className='text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500'>CSE</span> </h1>
