@@ -16,7 +16,8 @@ const UploadNotes = () => {
         subjectCode: '',
         unit: '',
         semester: '',
-        url: null
+        url: null,
+        extension: ''
     });
 
     const handleFileUpload = async (e) => {
@@ -90,7 +91,8 @@ const UploadNotes = () => {
                     subjectCode: notesDetails.subjectCode,
                     unit: notesDetails.unit,
                     semester: notesDetails.semester,
-                    url: notesDetails.url
+                    url: notesDetails.url,
+                    extension: notesDetails.extension
                 },
             );
 
@@ -113,8 +115,7 @@ const UploadNotes = () => {
             subject: '',
             subjectCode: '',
             unit: '',
-            semester: '',
-            url: null
+            url: null,
         });
     };
 
@@ -131,6 +132,9 @@ const UploadNotes = () => {
         else if (notesDetails.subjectCode.length < 3) {
             failureLong('Sub Code should be atleast 3 characters long');
         }
+        else if (notesDetails.extension === '') {
+            failure('Please choose the .extension of the file');
+        }
         else if (notesDetails.url === null) {
             failure('Please upload a file');
         }
@@ -142,7 +146,7 @@ const UploadNotes = () => {
     const renderFileUpload = () => {
         if (!notesDetails.url) {
             return (
-                <label htmlFor="notesFile">
+                <label className='preview flex flex-col items-center justify-center p-2 mb-8' htmlFor="notesFile">
                     <Image className=" h-full w-full cursor-pointer" src="/images/upload.svg" width={200} height={200} alt='Upload Image' />
                     {loading && <Image className='relative mx-auto mb-4 lg:mb-0 h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
                     {/* <FaCloudUploadAlt className="text-[#F02D65] -mt-20 text-[15rem] cursor-pointer" /> */}
@@ -179,32 +183,57 @@ const UploadNotes = () => {
                                 <h1 className=" text-5xl lg:text-7xl font-jost">Upload Notes</h1>
                             </div>
                             <form>
-                                <select
-                                    onChange={handleInputChange}
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
-                                    name="semester"
-                                    id="semester"
-                                >
-                                    <option disabled selected>Select Semester</option>
-                                    <option className='bg-white' value="3">
-                                        Semester 3
-                                    </option>
-                                    <option className=" bg-white" value="4">
-                                        Semester 4
-                                    </option>
-                                    <option className="bg-white" value="5">
-                                        Semester 5
-                                    </option>
-                                    <option className="bg-white" value="6">
-                                        Semester 6
-                                    </option>
-                                    <option className="bg-white" value="7">
-                                        Semester 7
-                                    </option>
-                                    <option className="bg-white" value="8">
-                                        Semester 8
-                                    </option>
-                                </select>
+                                <div className="datetime flex space-x-4">
+                                    <select
+                                        onChange={handleInputChange}
+                                        className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
+                                        name="semester"
+                                        id="semester"
+                                    >
+                                        <option disabled selected>Select Semester</option>
+                                        <option className='bg-white' value="3">
+                                            Semester 3
+                                        </option>
+                                        <option className=" bg-white" value="4">
+                                            Semester 4
+                                        </option>
+                                        <option className="bg-white" value="5">
+                                            Semester 5
+                                        </option>
+                                        <option className="bg-white" value="6">
+                                            Semester 6
+                                        </option>
+                                        <option className="bg-white" value="7">
+                                            Semester 7
+                                        </option>
+                                        <option className="bg-white" value="8">
+                                            Semester 8
+                                        </option>
+                                    </select>
+                                    <select
+                                        onChange={handleInputChange}
+                                        className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
+                                        name="extension"
+                                        id="extension"
+                                    >
+                                        <option disabled selected>Select Extension</option>
+                                        <option className='bg-white' value=".pdf">
+                                            .pdf (Portable Document Format)
+                                        </option>
+                                        <option className=" bg-white" value=".pptx">
+                                            .pptx (Microsoft PowerPoint Presentation)
+                                        </option>
+                                        <option className="bg-white" value=".docx">
+                                            .docx (Microsoft Word Document)
+                                        </option>
+                                        <option className="bg-white" value=".txt">
+                                            .txt (Plain Text File)
+                                        </option>
+                                        <option className="bg-white" value=".xlsx">
+                                            .xlsx (Microsoft Excel Spreadsheet)
+                                        </option>
+                                    </select>
+                                </div>
 
                                 <input
                                     onChange={handleInputChange}

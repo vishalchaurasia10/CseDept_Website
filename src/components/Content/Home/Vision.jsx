@@ -11,7 +11,7 @@ const Vision = () => {
                     <p className='text-xl text-center lg:text-4xl mt-4 font-jost'>To build a strong learning and research environment in the field of Computer Science and Engineering that promotes innovation towards the betterment of society.</p>
                 </div>
                 <div className='w-[80%] h-1 my-10 bg-pink-500 mx-auto'></div>
-                <div className="mission">
+                <div className="mission overflow-hidden">
                     <div className="vision my-2 flex flex-col items-center justify-center">
                         <h2 className='text-5xl lg:text-7xl mb-4 font-jost font-extrabold'>Mission</h2>
                     </div>

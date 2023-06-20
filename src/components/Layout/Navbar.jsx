@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { motion } from "framer-motion"
 import { navbarDetails } from '@/utils/constants';
 import Button from './Button';
 import Image from 'next/image';
@@ -30,11 +29,11 @@ const Navbar = () => {
                     <ul className='flex items-center justify-center space-x-6 text-xl'>
                         {
                             navbarDetails.map((item) => {
-                                const { key, title, url, options } = item;
+                                const { key, title, url } = item;
                                 return (
                                     <Link key={key} href={`${url}`}>
                                         <div className="relative group">
-                                            <span className={`hover:bg-[rgba(255,255,255,0.2)] ${router.pathname == { url } ? 'bg-[rgba(255,255,255,0.2)]' : ''} p-1 px-4 rounded-md transition-all duration-300 cursor-pointer`}>{title}</span>
+                                            <span className={`hover:bg-[rgba(255,255,255,0.2)] ${router.pathname === url ? 'bg-[rgba(255,255,255,0.2)]' : ''} p-1 px-4 rounded-md transition-all duration-300 cursor-pointer`}>{title}</span>
                                         </div>
                                     </Link>
                                 )
