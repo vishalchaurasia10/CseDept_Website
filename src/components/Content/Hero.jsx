@@ -7,7 +7,7 @@ const Hero = () => {
 
   useEffect(() => {
     const typed = new Typed(el.current, {
-      strings: ['Welcome to ', 'Department of Computer Science and Engineering,MSRIT'],
+      strings: ['Welcome to ', 'Department of Computer Science and Engineering, MSRIT'],
       typeSpeed: 30,
     });
 

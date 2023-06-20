@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from "framer-motion"
 import { navbarDetails } from '@/utils/constants';
 import Button from './Button';
+import Image from 'next/image';
 
 const Navbar = () => {
 
@@ -17,15 +18,15 @@ const Navbar = () => {
     return (
         <>
             <nav
-                className='z-20 text-white font-jost fixed top-0 left-0 right-0 bg-black flex justify-between items-center px-5 md:px-10 py-4'>
+                className='z-20 text-white font-jost fixed top-0 left-0 right-0 bg-black flex justify-between items-center px-5 md:px-10 pb-2 lg:pb-0 pt-2'>
 
-                <div className="left w-1/4 lg:w-full ">
+                <div className="left w-1/2 lg:w-full ">
                     <Link href='/'>
-                        <h1 className={`logo font-roboto font-extrabold text-2xl`}>Msrit<span className='text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500'>CSE</span> </h1>
+                        <Image className='relative top-1 scale-110 lg:top-0 lg:scale-100' src='/images/logo.png' width={200} height={200} alt='msrit_logo' />
                     </Link>
                 </div>
 
-                <div className="center lg:w-full hidden lg:block">
+                <div className="center lg:w-full hidden lg:-mt-1 lg:block">
                     <ul className='flex items-center justify-center space-x-6 text-xl'>
                         {
                             navbarDetails.map((item) => {
@@ -42,14 +43,14 @@ const Navbar = () => {
                     </ul>
                 </div>
 
-                <div className="right w-3/4 lg:w-full flex justify-end">
+                <div className="right w-3/4 lg:-mt-1 lg:w-full flex justify-end">
                     <Button destination='/adminPanel' content='Admin' />
                 </div>
 
                 <div className="hamburger relative -mr-2 ml-2 lg:hidden space-y-1">
-                    <div onClick={expandNav} className={`${navExpand ? '-rotate-45 translate-y-[0.45rem]' : ''} w-6 transition-all duration-300 rounded-full bg-white h-1`}></div>
-                    <div onClick={expandNav} className={`${navExpand ? 'scale-0' : ''} w-6 transition-all duration-300 rounded-full bg-white h-1`}></div>
-                    <div onClick={expandNav} className={`${navExpand ? 'rotate-45 -translate-y-2' : ''} w-6 transition-all duration-300 rounded-full bg-white h-1`}></div>
+                    <div onClick={expandNav} className={`${navExpand ? '-rotate-45 translate-y-[0.45rem]' : ''} w-6 transition-all duration-300 rounded-full bg-pureWhite h-1`}></div>
+                    <div onClick={expandNav} className={`${navExpand ? 'scale-0' : ''} w-6 transition-all duration-300 rounded-full bg-pureWhite h-1`}></div>
+                    <div onClick={expandNav} className={`${navExpand ? 'rotate-45 -translate-y-2' : ''} w-6 transition-all duration-300 rounded-full bg-pureWhite h-1`}></div>
                 </div>
             </nav >
 
