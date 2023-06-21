@@ -7,44 +7,95 @@ import Image from 'next/image';
 const Notes = () => {
     const [subjectNotes, setSubjectNotes] = useState([]);
     const NoteContext = useContext(noteContext);
-    const { notes } = NoteContext;
+    const { notes, fetchNotes } = NoteContext;
     const router = useRouter();
     const { semester, subject, unit } = router.query;
-    const targetSemester = semester[semester.length - 1];
+    const targetSemester = semester ? semester[semester.length - 1] : null;
     console.log(targetSemester, subject);
 
     useEffect(() => {
-        // Filter the notes array based on the specified semester and subject
+        if (notes.length === 0) {
+            fetchNotes().then(() => {
+                applyFilter();
+            });
+        } else {
+            applyFilter();
+        }
+    }, [notes, fetchNotes]);
+
+    const applyFilter = () => {
         const filteredNotes = notes.filter(
             (note) => note.semester === targetSemester && note.subjectCode === subject && note.unit === unit
         );
         setSubjectNotes(filteredNotes);
-    }, [notes, semester, subject]);
+    };
 
     useEffect(() => {
         console.log(subjectNotes);
     }, [subjectNotes]);
 
+    function convertStringToDateTime(dateTimeString) {
+        const dateTime = new Date(dateTimeString);
+
+        // Define month names
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        // Extract the date components
+        const day = dateTime.getDate();
+        const monthIndex = dateTime.getMonth();
+        const year = dateTime.getFullYear();
+
+        // Extract the time components
+        let hours = dateTime.getHours();
+        const minutes = dateTime.getMinutes();
+        const amPm = hours >= 12 ? 'pm' : 'am';
+
+        // Convert hours to 12-hour format
+        hours = hours % 12 || 12;
+
+        // Return the formatted date and time
+        const formattedDate = `${day} ${monthNames[monthIndex]} ${year}`;
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${amPm}`;
+
+        return { date: formattedDate, time: formattedTime };
+    }
+
+
     return (
         <>
             <div className="semesters lg:px-28 px-4 py-20 md:py-28 font-jost">
-                <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Notes</h1>
+                <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>{unit ? unit.toUpperCase() : ''}</h1>
                 <div className="wrapper flex flex-wrap">
                     {subjectNotes.map((item) => {
-                        const { name, $id, url, extension } = item;
+                        const { name, $id, url, extension, $updatedAt, subjectCode } = item;
                         const ext = extension.substring(1);
+                        const dateTime = convertStringToDateTime($updatedAt);
+                        const truncatedName = name.length > 20 ? `${name.substring(0, 20)}...` : name; // Truncate name if it exceeds 20 characters
                         return (
-                            <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
+                            <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-2 lg:mx-5 flex flex-col justify-center">
                                 <Link target='_blank' href={`${url}`}>
-                                    <Image className='cursor-pointer w-40 lg:w-64 hover:scale-105 transition-all duration-300' src={`/images/extensions/${ext}.svg`} width={300} height={300} alt='subjectFolder' />
+                                    <Image title='Click to view' className='cursor-pointer  mb-3 lg:w-52 hover:scale-105 transition-all duration-300' src={`/images/extensions/${ext}.svg`} width={300} height={300} alt='subjectFolder' />
                                 </Link>
-                                <Link href={`${url}`}>
-                                    <h2 className=' text-xl py-2 font-jost'>{name}</h2>
-                                </Link>
+                                <div className="updateDetails text-xs flex my-1 ">
+                                    <p className='font-bold'>Updated At :&nbsp;</p>
+                                    <span className='font-extralight'>{dateTime.date} |&nbsp;</span>
+                                    <span className='font-extralight'>{dateTime.time}</span>
+                                </div>
+                                <div title={name} className="nameDetails flex w-full">
+                                    <p className='font-bold'>Name :&nbsp;</p>
+                                    <p className='overflow-hidden whitespace-nowrap overflow-ellipsis'>{truncatedName}</p>
+                                </div>
+                                <div title={subjectCode} className="codeDetails flex">
+                                    <p className='font-bold'>Subject Code :&nbsp;</p>
+                                    <p className=''>{subjectCode}</p>
+                                </div>
+                                <div title={`Semester ${targetSemester}`} className="codeDetails flex">
+                                    <p className='font-bold'>Semester :&nbsp;</p>
+                                    <p className=''>{targetSemester}</p>
+                                </div>
                             </div>
-                        )
-                    }
-                    )}
+                        );
+                    })}
                 </div>
             </div>
         </>

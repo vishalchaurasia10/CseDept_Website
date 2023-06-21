@@ -7,14 +7,24 @@ import Image from 'next/image';
 const Units = () => {
     const [subjectUnits, setSubjectUnits] = useState([]);
     const NoteContext = useContext(noteContext);
-    const { notes } = NoteContext;
+    const { notes, fetchNotes } = NoteContext;
     const router = useRouter();
     const { semester, subject, } = router.query;
-    const targetSemester = semester[semester.length - 1];
+    const targetSemester = semester ? semester[semester.length - 1] : null;
     console.log(targetSemester, subject);
 
     useEffect(() => {
-        // Filter the notes array based on the specified semester and subject
+        if (notes.length === 0) {
+            fetchNotes().then(() => {
+                applyFilter();
+            });
+        } else {
+            applyFilter();
+        }
+    }, [notes, fetchNotes]);
+
+    const applyFilter = () => {
+        // Create a Set to store unique subject codes
         const uniqueUnits = new Set();
 
         const filteredUnits = notes.filter((note) => {
@@ -26,7 +36,8 @@ const Units = () => {
         });
 
         setSubjectUnits(filteredUnits);
-    }, []);
+    };
+
 
     return (
         <>
@@ -38,7 +49,7 @@ const Units = () => {
                         return (
                             <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
                                 <Link href={`/courses/${semester}/${subject}/${unit}`}>
-                                    <Image className='cursor-pointer w-40 lg:w-64 hover:scale-105 transition-all duration-300' src='/images/folder.svg' width={300} height={300} alt='subjectFolder' />
+                                    <Image className='cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300' src='/images/folder.svg' width={300} height={300} alt='subjectFolder' />
                                 </Link>
                                 <Link href={`/courses/${semester}/${subject}/${unit}`}>
                                     <h2 className=' text-xl py-2 font-jost'>{unit}</h2>

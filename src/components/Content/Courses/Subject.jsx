@@ -7,12 +7,22 @@ import Image from 'next/image';
 const Subject = () => {
     const [subject, setSubject] = useState([]);
     const NoteContext = useContext(noteContext);
-    const { notes } = NoteContext;
+    const { notes, fetchNotes } = NoteContext;
     const router = useRouter();
     const { semester } = router.query;
-    const targetSemester = semester[semester.length - 1]
+    const targetSemester = semester ? semester[semester.length - 1] : null;
 
     useEffect(() => {
+        if (notes.length === 0) {
+            fetchNotes().then(() => {
+                applyFilter();
+            });
+        } else {
+            applyFilter();
+        }
+    }, [notes, fetchNotes]);
+
+    const applyFilter = () => {
         // Create a Set to store unique subject codes
         const uniqueSubjects = new Set();
 
@@ -26,8 +36,7 @@ const Subject = () => {
         });
 
         setSubject(filteredSubjects);
-    }, []);
-
+    };
 
     return (
         <>
@@ -39,15 +48,14 @@ const Subject = () => {
                         return (
                             <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
                                 <Link href={`/courses/${semester}/${subjectCode}`}>
-                                    <Image className='cursor-pointer w-40 lg:w-64 hover:scale-105 transition-all duration-300' src='/images/folder.svg' width={300} height={300} alt='subjectFolder' />
+                                    <Image className='cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300' src='/images/folder.svg' width={300} height={300} alt='subjectFolder' />
                                 </Link>
                                 <Link href={`/courses/${router.query}/${subjectCode}`}>
                                     <h2 className=' text-xl py-2 font-jost'>{subjectCode}</h2>
                                 </Link>
                             </div>
-                        )
-                    }
-                    )}
+                        );
+                    })}
                 </div>
             </div>
         </>

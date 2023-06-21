@@ -5,7 +5,7 @@ import { FaBookmark, FaEnvelope, FaGlobeAmericas, FaLink, FaPhone } from 'react-
 const Footer = () => {
     return (
         <>
-            <div className="footer bg-[#262626] flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between font-jost text-white px-4 lg:px-28 py-10">
+            <div className="footer bg-[#262626] flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between font-jost text-white px-4 lg:px-28 py-20">
                 <div className="logo">
                     <Image src='/images/logo.png' width={200} height={200} alt='RIT_Logo' />
                 </div>
