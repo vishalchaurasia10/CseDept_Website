@@ -4,7 +4,6 @@ import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const success = (message) => toast.success(message, { duration: 3000 });
 const failure = (message) => toast.error(message, { duration: 3000 });
 const failureLong = (message) => toast.error(message, { duration: 3000, style: { minWidth: '380px' } });
 
@@ -172,7 +171,7 @@ const UploadNotes = () => {
     return (
         <>
             <Toaster />
-            <div className="wrapper px-2 lg:px-40 flex items-center justify-center">
+            <div className="wrapper px-2 lg:px-40 mb-5 lg:mb-10 flex items-center justify-center">
                 <div className="container shadow-2xl shadow-black bg-[#D7D9DD] text-[#262626] font-jost mt-28 w-full rounded-2xl border-2 border-white">
                     <div className="content flex flex-col lg:flex-row">
                         <div className="heading lg:hidden block mt-6 px-7 font-bold">
