@@ -72,15 +72,17 @@ const Notes = () => {
                         const dateTime = convertStringToDateTime($updatedAt);
                         const truncatedName = name.length > 20 ? `${name.substring(0, 20)}...` : name; // Truncate name if it exceeds 20 characters
                         return (
-                            <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-2 lg:mx-5 space-x-4 flex justify-center w-full md:w-[47%] lg:w-[30%]">
-                                <Link className='w-1/4 lg:w-1/2 flex items-center justify-center mr-4 lg:mr-0' target='_blank' href={`${url}`}>
-                                    <Image title='Click to view' className='cursor-pointer  mb-3 lg:w-52 hover:scale-105 transition-all duration-300' src={`/images/extensions/${ext}.svg`} width={300} height={300} alt='subjectFolder' />
+                            <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex justify-center">
+                                <Link className='w-1/2 flex items-center justify-center lg:mr-4' target='_blank' href={`${url}`}>
+                                    <Image title='Click to view' className='cursor-pointer lg:w-52 hover:scale-105 transition-all duration-300' src={`/images/extensions/${ext}.svg`} width={300} height={300} alt='subjectFolder' />
                                 </Link>
                                 <div className="details w-3/4 lg:w-full flex flex-col justify-center">
                                     <div className="updateDetails text-xs flex my-1 ">
-                                        <p className='font-bold'>Updated At :&nbsp;</p>
-                                        <span className='font-extralight'>{dateTime.date} |&nbsp;</span>
-                                        <span className='font-extralight'>{dateTime.time}</span>
+                                        <p className='font-bold whitespace-nowrap'>Updated At :&nbsp;</p>
+                                        <p className='whitespace-nowrap'>
+                                            <span className='font-extralight'>{dateTime.date} |&nbsp;</span>
+                                            <span className='font-extralight'>{dateTime.time}</span>
+                                        </p>
                                     </div>
                                     {name.length > 0 && <div title={name} className="nameDetails flex w-full">
                                         <p className='font-bold'>Name&nbsp;</p>
