@@ -4,8 +4,20 @@ import { semesterDetails } from '@/utils/constants';
 import Link from 'next/link';
 import noteContext from '@/context/notes/noteContext';
 import loadingContext from '@/context/loading/loadingContext';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 const Semester = () => {
+
+    const [ref, inView] = useInView({
+        triggerOnce: true, // Only trigger the animation once
+        threshold: 0.1, // Customize the threshold for triggering the animation
+    });
+
+    const variants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+    };
 
     const NoteContext = useContext(noteContext);
     const { notes, fetchNotes } = NoteContext;
@@ -24,7 +36,13 @@ const Semester = () => {
                     <Image src='/images/loading.gif' width={300} height={300} alt='notes' />
                 </div>
                 :
-                <div className="semesters lg:px-28 px-4 py-20 md:py-24 font-jost">
+                <motion.div
+                    className="semesters lg:px-28 px-4 py-20 md:py-24 font-jost"
+                    ref={ref}
+                    initial="hidden"
+                    animate={inView ? 'visible' : 'hidden'}
+                    variants={variants}
+                    transition={{ duration: 0.5 }}>
                     <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Courses</h1>
                     <div className="wrapper flex flex-wrap">
                         {semesterDetails.map((item) => {
@@ -42,7 +60,7 @@ const Semester = () => {
                         }
                         )}
                     </div>
-                </div>}
+                </motion.div>}
         </>
     )
 }

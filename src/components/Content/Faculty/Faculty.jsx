@@ -4,6 +4,8 @@ import Link from 'next/link';
 import facultyContext from '@/context/faculty/facultyContext';
 import { FaArrowRight } from 'react-icons/fa';
 import loadingContext from '@/context/loading/loadingContext';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 const Faculty = () => {
 
@@ -11,6 +13,16 @@ const Faculty = () => {
     const { faculty, fetchFaculty } = FacultyContext;
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
+
+    const [ref, inView] = useInView({
+        triggerOnce: true, // Only trigger the animation once
+        threshold: 0.1, // Customize the threshold for triggering the animation
+    });
+
+    const variants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+    };
 
     useEffect(() => {
         if (faculty.length === 0)
@@ -44,10 +56,16 @@ const Faculty = () => {
             (faculty.length == 0 ?
                 <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
                     <Image src='/images/error.gif' width={300} height={300} alt='notes' />
-                    <h1 className='text-5xl pb-8 lg:px-6 font-jost font-extrabold'>No data has been uploaded</h1>
+                    <h1 className='text-5xl pb-8 px-4 text-center lg:px-6 font-jost font-extrabold'>No data has been uploaded</h1>
                 </div>
                 :
-                <div className="semesters lg:px-52 px-4 py-20 md:py-24 font-jost">
+                <motion.div
+                    className="semesters lg:px-52 px-4 py-20 md:py-24 font-jost"
+                    ref={ref}
+                    initial="hidden"
+                    animate={inView ? 'visible' : 'hidden'}
+                    variants={variants}
+                    transition={{ duration: 0.5 }}>
                     <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Faculties</h1>
                     <div className="wrapper flex flex-wrap">
                         {faculty.length > 0 && faculty.map((item) => {
@@ -80,7 +98,7 @@ const Faculty = () => {
                         }
                         )}
                     </div>
-                </div>)}
+                </motion.div>)}
         </>
     )
 }
