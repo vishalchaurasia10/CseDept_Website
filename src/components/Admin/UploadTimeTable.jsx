@@ -69,7 +69,6 @@ const UploadTimeTable = () => {
     };
 
     const handleTimeTableInputSubmit = async () => {
-        console.log(timeTableDetails);
         try {
             const client = new Client()
                 .setEndpoint('https://cloud.appwrite.io/v1')

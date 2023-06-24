@@ -24,6 +24,11 @@ export const navbarDetails = [
         url: "/announcements",
         key: 5,
     },
+    {
+        title: "Important Links",
+        url: "/importantlinks",
+        key: 5,
+    },
 ]
 
 export const semesterDetails = [

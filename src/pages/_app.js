@@ -6,6 +6,7 @@ import NoteState from '@/context/notes/NoteState'
 import TimetableState from '@/context/timetable/TimetableState'
 import LoadingState from '@/context/loading/LoadingState'
 import '@/styles/globals.css'
+import ImportantlinkState from '@/context/importantLinks/ImportantlinkState'
 
 export default function App({ Component, pageProps }) {
   return (
@@ -16,7 +17,9 @@ export default function App({ Component, pageProps }) {
           <NoteState>
             <FacultyState>
               <TimetableState>
-                <Component {...pageProps} />
+                <ImportantlinkState>
+                  <Component {...pageProps} />
+                </ImportantlinkState>
               </TimetableState>
             </FacultyState>
           </NoteState>

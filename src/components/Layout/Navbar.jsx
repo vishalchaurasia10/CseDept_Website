@@ -32,7 +32,7 @@ const Navbar = () => {
                                 const { key, title, url } = item;
                                 return (
                                     <Link key={key} href={`${url}`}>
-                                        <div className="relative group">
+                                        <div className="relative group whitespace-nowrap">
                                             <span className={`hover:bg-[rgba(255,255,255,0.2)] ${router.pathname === url ? 'bg-[rgba(255,255,255,0.2)]' : ''} p-1 px-4 rounded-md transition-all duration-300 cursor-pointer`}>{title}</span>
                                         </div>
                                     </Link>
@@ -61,6 +61,7 @@ const Navbar = () => {
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/faculty'>Faculty</Link></li>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/timetable'>Time Table</Link></li>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/announcements'>Announcements</Link></li>
+                    <li onClick={expandNav} className='cursor-pointer'><Link href='/importantlinks'>Important Links</Link></li>
                 </ul>
             </div>
 

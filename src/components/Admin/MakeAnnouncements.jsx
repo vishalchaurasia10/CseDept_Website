@@ -44,8 +44,8 @@ const MakeAnnouncements = () => {
             toast.promise(
                 Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
                 {
-                    success: () => 'Document successfully uploaded!',
-                    error: () => 'Error uploading document.',
+                    success: () => 'Link successfully uploaded!',
+                    error: () => 'Error uploading link.',
                     duration: 3000,
                     position: 'top-center',
                 }
