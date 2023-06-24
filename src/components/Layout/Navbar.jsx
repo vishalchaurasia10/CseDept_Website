@@ -59,7 +59,7 @@ const Navbar = () => {
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/'>Home</Link></li>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/courses'>Courses</Link></li>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/faculty'>Faculty</Link></li>
-                    <li onClick={expandNav} className='cursor-pointer'><Link href='/time-table'>Time Table</Link></li>
+                    <li onClick={expandNav} className='cursor-pointer'><Link href='/timetable'>Time Table</Link></li>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/announcements'>Announcements</Link></li>
                 </ul>
             </div>

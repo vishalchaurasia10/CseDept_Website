@@ -4,21 +4,24 @@ import AnnouncementState from '@/context/announcement/AnnouncementState'
 import FacultyState from '@/context/faculty/FacultyState'
 import NoteState from '@/context/notes/NoteState'
 import TimetableState from '@/context/timetable/TimetableState'
+import LoadingState from '@/context/loading/LoadingState'
 import '@/styles/globals.css'
 
 export default function App({ Component, pageProps }) {
   return (
     <>
       <Navbar />
-      <AnnouncementState>
-        <NoteState>
-          <FacultyState>
-            <TimetableState>
-              <Component {...pageProps} />
-            </TimetableState>
-          </FacultyState>
-        </NoteState>
-      </AnnouncementState>
+      <LoadingState>
+        <AnnouncementState>
+          <NoteState>
+            <FacultyState>
+              <TimetableState>
+                <Component {...pageProps} />
+              </TimetableState>
+            </FacultyState>
+          </NoteState>
+        </AnnouncementState>
+      </LoadingState>
       <Footer />
     </>
   )

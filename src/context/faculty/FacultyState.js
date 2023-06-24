@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import FacultyContext from "./facultyContext";
 import { Client, Databases } from "appwrite";
+import loadingContext from "../loading/loadingContext";
 
 const FacultyState = (props) => {
 
     const [faculty, setFaculty] = useState([])
+    const LoadingContext = useContext(loadingContext);
+    const { setLoading } = LoadingContext;
 
     const fetchFaculty = async () => {
         try {
+            setLoading(true);
             const client = new Client();
             const databases = new Databases(client);
             client
@@ -17,6 +21,7 @@ const FacultyState = (props) => {
             const result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_FACULTY_COLLECTION_ID,);
 
             setFaculty(result.documents);
+            setLoading(false);
         } catch (error) {
             console.log(error);
         }

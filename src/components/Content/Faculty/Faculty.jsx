@@ -3,22 +3,20 @@ import React, { useContext, useEffect } from 'react'
 import Link from 'next/link';
 import facultyContext from '@/context/faculty/facultyContext';
 import { FaArrowRight } from 'react-icons/fa';
+import loadingContext from '@/context/loading/loadingContext';
 
 const Faculty = () => {
 
     const FacultyContext = useContext(facultyContext);
     const { faculty, fetchFaculty } = FacultyContext;
+    const LoadingContext = useContext(loadingContext);
+    const { loading } = LoadingContext;
 
     useEffect(() => {
         if (faculty.length === 0)
             fetchFaculty();
-        else
-            console.log(faculty);
     }, [])
 
-    useEffect(() => {
-        console.log(faculty);
-    }, [faculty])
 
     function capitalizeWords(str) {
         // Split the string into an array of words
@@ -38,7 +36,11 @@ const Faculty = () => {
     }
 
     return (
-        <>
+        <>{loading ?
+            <div className="loading flex items-center justify-center h-screen">
+                <Image src='/images/loading.gif' width={300} height={300} alt='notes' />
+            </div>
+            :
             <div className="semesters lg:px-52 px-4 py-20 md:py-24 font-jost">
                 <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Faculties</h1>
                 <div className="wrapper flex flex-wrap">
@@ -72,7 +74,7 @@ const Faculty = () => {
                     }
                     )}
                 </div>
-            </div>
+            </div>}
         </>
     )
 }

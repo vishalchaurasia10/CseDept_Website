@@ -2,11 +2,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useContext, useEffect } from 'react'
 import announcementContext from '@/context/announcement/announcementContext';
+import loadingContext from '@/context/loading/loadingContext';
 
 const TimeTable = () => {
 
   const AnnouncementContext = useContext(announcementContext);
   const { announcements, fetchAnnouncements } = AnnouncementContext;
+  const LoadingContext = useContext(loadingContext);
+  const { loading } = LoadingContext;
 
   useEffect(() => {
     if (announcements.length === 0)
@@ -40,7 +43,11 @@ const TimeTable = () => {
   }
 
   return (
-    <>
+    <>{loading ?
+      <div className="loading flex items-center justify-center h-screen">
+        <Image src='/images/loading.gif' width={300} height={300} alt='notes' />
+      </div>
+      :
       <div className="announcements lg:px-28 px-4 py-20 md:py-28 font-jost">
         <h1 className='text-5xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Announcements</h1>
         <div className="wrapper flex flex-wrap">
@@ -165,12 +172,12 @@ const TimeTable = () => {
                     )}
                   </div>
                 </div>
-                
+
               </>
             );
           })}
         </div>
-      </div>
+      </div>}
     </>
   )
 }
