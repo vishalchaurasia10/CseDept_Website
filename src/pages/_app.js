@@ -7,6 +7,7 @@ import TimetableState from '@/context/timetable/TimetableState'
 import LoadingState from '@/context/loading/LoadingState'
 import '@/styles/globals.css'
 import ImportantlinkState from '@/context/importantLinks/ImportantlinkState'
+import AssignmentState from '@/context/assignments/AssignmentState'
 
 export default function App({ Component, pageProps }) {
   return (
@@ -15,13 +16,15 @@ export default function App({ Component, pageProps }) {
       <LoadingState>
         <AnnouncementState>
           <NoteState>
-            <FacultyState>
-              <TimetableState>
-                <ImportantlinkState>
-                  <Component {...pageProps} />
-                </ImportantlinkState>
-              </TimetableState>
-            </FacultyState>
+            <AssignmentState>
+              <FacultyState>
+                <TimetableState>
+                  <ImportantlinkState>
+                    <Component {...pageProps} />
+                  </ImportantlinkState>
+                </TimetableState>
+              </FacultyState>
+            </AssignmentState>
           </NoteState>
         </AnnouncementState>
       </LoadingState>

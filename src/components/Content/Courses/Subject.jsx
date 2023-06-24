@@ -81,7 +81,7 @@ const Subject = () => {
                                         <Link href={`/courses/${semester}/${subjectCode}`}>
                                             <Image className='cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300' src='/images/folder.svg' width={300} height={300} alt='subjectFolder' />
                                         </Link>
-                                        <Link href={`/courses/${router.query}/${subjectCode}`}>
+                                        <Link href={`/courses/${semester}/${subjectCode}`}>
                                             <h2 className=' text-xl py-2 font-jost'>{subjectCode}</h2>
                                         </Link>
                                     </div>
