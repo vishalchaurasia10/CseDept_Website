@@ -18,11 +18,11 @@ const Units = () => {
     const AssignmentContext = useContext(assignmentContext);
     const { assignment, fetchAssignment } = AssignmentContext;
     const router = useRouter();
-    const { semester, subject, } = router.query;
+    const { semester, subject } = router.query;
     const targetSemester = semester ? semester[semester.length - 1] : null;
     const [ref, inView] = useInView({
-        triggerOnce: true, // Only trigger the animation once
-        threshold: 0.1, // Customize the threshold for triggering the animation
+        triggerOnce: true,
+        threshold: 0.1,
     });
 
     const variants = {
@@ -42,17 +42,14 @@ const Units = () => {
         if (assignment.length === 0) {
             fetchAssignment().then(() => {
                 applyAssignmentFilter();
-            }
-            )
+            });
         } else {
             applyAssignmentFilter();
         }
     }, [notes, fetchNotes]);
 
     const applyFilter = () => {
-        // Create a Set to store unique subject codes
         const uniqueUnits = new Set();
-
         const filteredUnits = notes.filter((note) => {
             if (note.semester === targetSemester && note.subjectCode === subject && !uniqueUnits.has(note.unit)) {
                 uniqueUnits.add(note.unit);
@@ -60,38 +57,25 @@ const Units = () => {
             }
             return false;
         });
-
         setSubjectUnits(filteredUnits);
     };
 
-    function convertStringToDateTime(dateTimeString) {
+    const convertStringToDateTime = (dateTimeString) => {
         const dateTime = new Date(dateTimeString);
-
-        // Define month names
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-        // Extract the date components
         const day = dateTime.getDate();
         const monthIndex = dateTime.getMonth();
         const year = dateTime.getFullYear();
-
-        // Extract the time components
         let hours = dateTime.getHours();
         const minutes = dateTime.getMinutes();
         const amPm = hours >= 12 ? 'pm' : 'am';
-
-        // Convert hours to 12-hour format
         hours = hours % 12 || 12;
-
-        // Return the formatted date and time
         const formattedDate = `${day} ${monthNames[monthIndex]} ${year}`;
         const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${amPm}`;
-
         return { date: formattedDate, time: formattedTime };
-    }
+    };
 
     const applyAssignmentFilter = () => {
-        // Create a Set to store unique subject codes
         const uniqueAssignments = new Set();
         if (assignment.length !== 0) {
             const filteredAssignments = assignment.filter((assignment) => {
@@ -105,46 +89,45 @@ const Units = () => {
         }
     };
 
-
-
     return (
         <>
-            {loading ?
+            {loading ? (
                 <div className="loading flex items-center justify-center h-screen">
-                    <Image src='/images/loading.gif' width={300} height={300} alt='notes' />
+                    <Image src="/images/loading.gif" width={300} height={300} alt="notes" />
                 </div>
-                :
-                (subjectUnits.length == 0 ?
-                    <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
-                        <Image src='/images/error.gif' width={300} height={300} alt='notes' />
-                        <h1 className='text-5xl pb-8 px-4 text-center lg:px-6 font-jost font-extrabold'>No data has been uploaded</h1>
+            ) : subjectUnits.length === 0 ? (
+                <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
+                    <Image src="/images/error.gif" width={300} height={300} alt="notes" />
+                    <h1 className="text-5xl pb-8 px-4 text-center lg:px-6 font-jost font-extrabold">No notes have been uploaded</h1>
+                    <h4 className="text-lg pb-8 px-4 text-center lg:px-6 font-jost">Scroll down for any assignments</h4>
+                </div>
+            ) : (
+                <motion.div
+                    className="semesters lg:px-28 px-4 pt-20 md:pt-28 font-jost"
+                    ref={ref}
+                    initial="hidden"
+                    animate={inView ? 'visible' : 'hidden'}
+                    variants={variants}
+                    transition={{ duration: 0.5 }}
+                >
+                    <h1 className="text-7xl pb-8 lg:px-6 font-jost font-extrabold">Units</h1>
+                    <div className="wrapper flex flex-wrap">
+                        {subjectUnits.map((item) => {
+                            const { unit, $id } = item;
+                            return (
+                                <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
+                                    <Link href={`/courses/${semester}/${subject}/${unit}`}>
+                                        <Image className="cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300" src="/images/folder.svg" width={300} height={300} alt="subjectFolder" />
+                                    </Link>
+                                    <Link href={`/courses/${semester}/${subject}/${unit}`}>
+                                        <h2 className="text-xl py-2 font-jost">{unit}</h2>
+                                    </Link>
+                                </div>
+                            );
+                        })}
                     </div>
-                    :
-                    <motion.div
-                        className="semesters lg:px-28 px-4 pt-20 md:pt-28 font-jost"
-                        ref={ref}
-                        initial="hidden"
-                        animate={inView ? 'visible' : 'hidden'}
-                        variants={variants}
-                        transition={{ duration: 0.5 }}>
-                        <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Units</h1>
-                        <div className="wrapper flex flex-wrap">
-                            {subjectUnits.map((item) => {
-                                const { unit, $id } = item;
-                                return (
-                                    <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
-                                        <Link href={`/courses/${semester}/${subject}/${unit}`}>
-                                            <Image className='cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300' src='/images/folder.svg' width={300} height={300} alt='subjectFolder' />
-                                        </Link>
-                                        <Link href={`/courses/${semester}/${subject}/${unit}`}>
-                                            <h2 className=' text-xl py-2 font-jost'>{unit}</h2>
-                                        </Link>
-                                    </div>
-                                )
-                            }
-                            )}
-                        </div>
-                    </motion.div>)}
+                </motion.div>
+            )}
 
             <motion.div
                 className="semesters lg:px-28 px-4 py-20 md:py-28 font-jost"
@@ -152,53 +135,63 @@ const Units = () => {
                 initial="hidden"
                 animate={inView ? 'visible' : 'hidden'}
                 variants={variants}
-                transition={{ duration: 0.5 }}>
-                <h1 className='text-6xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Assignments</h1>
+                transition={{ duration: 0.5 }}
+            >
+                <h1 className="text-6xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold">Assignments</h1>
                 <div className="wrapper flex flex-wrap">
                     {assignmentUnits.map((item) => {
                         const { name, $id, url, extension, $updatedAt, subjectCode } = item;
                         const ext = extension.substring(1);
                         const dateTime = convertStringToDateTime($updatedAt);
-                        const truncatedName = name.length > 20 ? `${name.substring(0, 20)}...` : name; // Truncate name if it exceeds 20 characters
+                        const truncatedName = name.length > 20 ? `${name.substring(0, 20)}...` : name;
                         return (
                             <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex justify-center">
-                                <Link className='w-1/2 flex items-center justify-center lg:mr-4' target='_blank' href={`${url}`}>
-                                    <Image title='Click to view' className='cursor-pointer lg:w-52 hover:scale-105 transition-all duration-300' src={`/images/extensions/${ext}.svg`} width={300} height={300} alt='subjectFolder' />
+                                <Link className="w-1/2 flex items-center justify-center lg:mr-4" target="_blank" href={`${url}`}>
+                                    <Image title="Click to view" className="cursor-pointer lg:w-52 hover:scale-105 transition-all duration-300" src={`/images/extensions/${ext}.svg`} width={300} height={300} alt="subjectFolder" />
                                 </Link>
                                 <div className="details w-3/4 lg:w-full flex flex-col justify-center">
                                     <div className="updateDetails text-xs flex my-1 ">
-                                        <p className='font-bold whitespace-nowrap'>Updated At :&nbsp;</p>
-                                        <p className='whitespace-nowrap'>
-                                            <span className='font-extralight'>{dateTime.date} |&nbsp;</span>
-                                            <span className='font-extralight'>{dateTime.time}</span>
+                                        <p className="font-bold whitespace-nowrap">Updated At:&nbsp;</p>
+                                        <p className="whitespace-nowrap">
+                                            <span className="font-extralight">{dateTime.date} |&nbsp;</span>
+                                            <span className="font-extralight">{dateTime.time}</span>
                                         </p>
                                     </div>
-                                    {name.length > 0 && <div title={name} className="nameDetails flex w-full">
-                                        <p className='font-bold'>Name&nbsp;</p>
-                                        <Link target='_blank' href={`${url}`}>
-                                            <p className='overflow-hidden hover:underline whitespace-nowrap overflow-ellipsis'><span className='font-bold'>:</span> {truncatedName}</p>
-                                        </Link>
-                                    </div>}
-                                    {subjectCode.length > 0 && <div title={subjectCode} className="codeDetails flex">
-                                        <p className='font-bold'>Subject Code :&nbsp;</p>
-                                        <p className=''>{subjectCode}</p>
-                                    </div>}
-                                    {targetSemester > 0 && <div title={`Semester ${targetSemester}`} className="codeDetails flex items-center">
-                                        <div className='flex items-center justify-center'>
-                                            <p className='font-bold'>Semester :&nbsp;</p>
-                                            <p className='mt-[0.1rem]'>{targetSemester} |&nbsp;</p>
-                                        </div>
-                                        {url && <div title={`Download ${name}`} className="codeDetails flex">
-                                            <Link target='_blank' href={`${url}`}>
-                                                <p className='font-bold hover:underline'>Download</p>
+                                    {name.length > 0 && (
+                                        <div title={name} className="nameDetails flex w-full">
+                                            <p className="font-bold">Name&nbsp;</p>
+                                            <Link target="_blank" href={`${url}`}>
+                                                <p className="overflow-hidden hover:underline whitespace-nowrap overflow-ellipsis">
+                                                    <span className="font-bold">:</span> {truncatedName}
+                                                </p>
                                             </Link>
-                                        </div>}
-                                    </div>}
+                                        </div>
+                                    )}
+                                    {subjectCode.length > 0 && (
+                                        <div title={subjectCode} className="codeDetails flex">
+                                            <p className="font-bold">Subject Code:&nbsp;</p>
+                                            <p className="">{subjectCode}</p>
+                                        </div>
+                                    )}
+                                    {targetSemester > 0 && (
+                                        <div title={`Semester ${targetSemester}`} className="codeDetails flex items-center">
+                                            <div className="flex items-center justify-center">
+                                                <p className="font-bold">Semester:&nbsp;</p>
+                                                <p className="mt-[0.1rem]">{targetSemester} |&nbsp;</p>
+                                            </div>
+                                            {url && (
+                                                <div title={`Download ${name}`} className="codeDetails flex">
+                                                    <Link target="_blank" href={`${url}`}>
+                                                        <p className="font-bold hover:underline">Download</p>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         );
-                    }
-                    )}
+                    })}
                 </div>
             </motion.div>
         </>
