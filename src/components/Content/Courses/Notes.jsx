@@ -66,54 +66,60 @@ const Notes = () => {
                     <Image src='/images/loading.gif' width={300} height={300} alt='notes' />
                 </div>
                 :
-                <div className="semesters lg:px-28 px-4 py-20 md:py-28 font-jost">
-                    <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>{unit ? unit.toUpperCase() : ''}</h1>
-                    <div className="wrapper flex flex-wrap">
-                        {subjectNotes.map((item) => {
-                            const { name, $id, url, extension, $updatedAt, subjectCode } = item;
-                            const ext = extension.substring(1);
-                            const dateTime = convertStringToDateTime($updatedAt);
-                            const truncatedName = name.length > 20 ? `${name.substring(0, 20)}...` : name; // Truncate name if it exceeds 20 characters
-                            return (
-                                <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex justify-center">
-                                    <Link className='w-1/2 flex items-center justify-center lg:mr-4' target='_blank' href={`${url}`}>
-                                        <Image title='Click to view' className='cursor-pointer lg:w-52 hover:scale-105 transition-all duration-300' src={`/images/extensions/${ext}.svg`} width={300} height={300} alt='subjectFolder' />
-                                    </Link>
-                                    <div className="details w-3/4 lg:w-full flex flex-col justify-center">
-                                        <div className="updateDetails text-xs flex my-1 ">
-                                            <p className='font-bold whitespace-nowrap'>Updated At :&nbsp;</p>
-                                            <p className='whitespace-nowrap'>
-                                                <span className='font-extralight'>{dateTime.date} |&nbsp;</span>
-                                                <span className='font-extralight'>{dateTime.time}</span>
-                                            </p>
-                                        </div>
-                                        {name.length > 0 && <div title={name} className="nameDetails flex w-full">
-                                            <p className='font-bold'>Name&nbsp;</p>
-                                            <Link target='_blank' href={`${url}`}>
-                                                <p className='overflow-hidden hover:underline whitespace-nowrap overflow-ellipsis'><span className='font-bold'>:</span> {truncatedName}</p>
-                                            </Link>
-                                        </div>}
-                                        {subjectCode.length > 0 && <div title={subjectCode} className="codeDetails flex">
-                                            <p className='font-bold'>Subject Code :&nbsp;</p>
-                                            <p className=''>{subjectCode}</p>
-                                        </div>}
-                                        {targetSemester > 0 && <div title={`Semester ${targetSemester}`} className="codeDetails flex items-center">
-                                            <div className='flex items-center justify-center'>
-                                                <p className='font-bold'>Semester :&nbsp;</p>
-                                                <p className='mt-[0.1rem]'>{targetSemester} |&nbsp;</p>
+                (subjectNotes.length == 0 ?
+                    <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
+                        <Image src='/images/error.gif' width={300} height={300} alt='notes' />
+                        <h1 className='text-5xl pb-8 lg:px-6 font-jost font-extrabold'>No data has been uploaded</h1>
+                    </div>
+                    :
+                    <div className="semesters lg:px-28 px-4 py-20 md:py-28 font-jost">
+                        <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>{unit ? unit.toUpperCase() : ''}</h1>
+                        <div className="wrapper flex flex-wrap">
+                            {subjectNotes.map((item) => {
+                                const { name, $id, url, extension, $updatedAt, subjectCode } = item;
+                                const ext = extension.substring(1);
+                                const dateTime = convertStringToDateTime($updatedAt);
+                                const truncatedName = name.length > 20 ? `${name.substring(0, 20)}...` : name; // Truncate name if it exceeds 20 characters
+                                return (
+                                    <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex justify-center">
+                                        <Link className='w-1/2 flex items-center justify-center lg:mr-4' target='_blank' href={`${url}`}>
+                                            <Image title='Click to view' className='cursor-pointer lg:w-52 hover:scale-105 transition-all duration-300' src={`/images/extensions/${ext}.svg`} width={300} height={300} alt='subjectFolder' />
+                                        </Link>
+                                        <div className="details w-3/4 lg:w-full flex flex-col justify-center">
+                                            <div className="updateDetails text-xs flex my-1 ">
+                                                <p className='font-bold whitespace-nowrap'>Updated At :&nbsp;</p>
+                                                <p className='whitespace-nowrap'>
+                                                    <span className='font-extralight'>{dateTime.date} |&nbsp;</span>
+                                                    <span className='font-extralight'>{dateTime.time}</span>
+                                                </p>
                                             </div>
-                                            {url && <div title={`Download ${name}`} className="codeDetails flex">
+                                            {name.length > 0 && <div title={name} className="nameDetails flex w-full">
+                                                <p className='font-bold'>Name&nbsp;</p>
                                                 <Link target='_blank' href={`${url}`}>
-                                                    <p className='font-bold hover:underline'>Download</p>
+                                                    <p className='overflow-hidden hover:underline whitespace-nowrap overflow-ellipsis'><span className='font-bold'>:</span> {truncatedName}</p>
                                                 </Link>
                                             </div>}
-                                        </div>}
+                                            {subjectCode.length > 0 && <div title={subjectCode} className="codeDetails flex">
+                                                <p className='font-bold'>Subject Code :&nbsp;</p>
+                                                <p className=''>{subjectCode}</p>
+                                            </div>}
+                                            {targetSemester > 0 && <div title={`Semester ${targetSemester}`} className="codeDetails flex items-center">
+                                                <div className='flex items-center justify-center'>
+                                                    <p className='font-bold'>Semester :&nbsp;</p>
+                                                    <p className='mt-[0.1rem]'>{targetSemester} |&nbsp;</p>
+                                                </div>
+                                                {url && <div title={`Download ${name}`} className="codeDetails flex">
+                                                    <Link target='_blank' href={`${url}`}>
+                                                        <p className='font-bold hover:underline'>Download</p>
+                                                    </Link>
+                                                </div>}
+                                            </div>}
+                                        </div>
                                     </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>}
+                                );
+                            })}
+                        </div>
+                    </div>)}
         </>
     );
 };

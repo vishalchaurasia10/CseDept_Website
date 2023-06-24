@@ -48,25 +48,31 @@ const Units = () => {
                     <Image src='/images/loading.gif' width={300} height={300} alt='notes' />
                 </div>
                 :
-                <div className="semesters lg:px-28 px-4 py-20 md:py-28 font-jost">
-                    <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Units</h1>
-                    <div className="wrapper flex flex-wrap">
-                        {subjectUnits.map((item) => {
-                            const { unit, $id } = item;
-                            return (
-                                <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
-                                    <Link href={`/courses/${semester}/${subject}/${unit}`}>
-                                        <Image className='cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300' src='/images/folder.svg' width={300} height={300} alt='subjectFolder' />
-                                    </Link>
-                                    <Link href={`/courses/${semester}/${subject}/${unit}`}>
-                                        <h2 className=' text-xl py-2 font-jost'>{unit}</h2>
-                                    </Link>
-                                </div>
-                            )
-                        }
-                        )}
+                (subjectUnits.length == 0 ?
+                    <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
+                        <Image src='/images/error.gif' width={300} height={300} alt='notes' />
+                        <h1 className='text-5xl pb-8 lg:px-6 font-jost font-extrabold'>No data has been uploaded</h1>
                     </div>
-                </div>}
+                    :
+                    <div className="semesters lg:px-28 px-4 py-20 md:py-28 font-jost">
+                        <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Units</h1>
+                        <div className="wrapper flex flex-wrap">
+                            {subjectUnits.map((item) => {
+                                const { unit, $id } = item;
+                                return (
+                                    <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
+                                        <Link href={`/courses/${semester}/${subject}/${unit}`}>
+                                            <Image className='cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300' src='/images/folder.svg' width={300} height={300} alt='subjectFolder' />
+                                        </Link>
+                                        <Link href={`/courses/${semester}/${subject}/${unit}`}>
+                                            <h2 className=' text-xl py-2 font-jost'>{unit}</h2>
+                                        </Link>
+                                    </div>
+                                )
+                            }
+                            )}
+                        </div>
+                    </div>)}
         </>
     );
 };
