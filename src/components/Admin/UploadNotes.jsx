@@ -119,8 +119,10 @@ const UploadNotes = () => {
     };
 
     const CheckValidity = () => {
-        if (notesDetails.name === '' || notesDetails.subject === '' || notesDetails.subjectCode === '' || notesDetails.unit === '' || notesDetails.semester === '') {
+        if (notesDetails.name === '' || notesDetails.subject === '' || notesDetails.subjectCode === '' || notesDetails.unit === '') {
             failure('Please fill all the fields');
+        } else if (notesDetails.semester === '') {
+            failure('Please select the semester');
         }
         else if (notesDetails.name.length < 5) {
             failureLong('Name should be atleast 5 characters long');
@@ -188,8 +190,11 @@ const UploadNotes = () => {
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="semester"
                                         id="semester"
+                                        defaultValue=''
                                     >
-                                        <option disabled selected>Select Semester</option>
+                                        <option disabled value=''>
+                                            Select Semester
+                                        </option>
                                         <option className='bg-white' value="3">
                                             Semester 3
                                         </option>
@@ -214,8 +219,11 @@ const UploadNotes = () => {
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="extension"
                                         id="extension"
+                                        defaultValue=''
                                     >
-                                        <option disabled selected>Select Extension</option>
+                                        <option disabled value=''>
+                                            Select Extension
+                                        </option>
                                         <option className='bg-white' value=".pdf">
                                             .pdf (Portable Document Format)
                                         </option>

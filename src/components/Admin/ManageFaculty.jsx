@@ -3,6 +3,7 @@ import { Client, Databases, Storage, ID } from 'appwrite';
 import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
 import Link from 'next/link';
+import faculty from '@/pages/faculty';
 
 const failure = (message) => toast.error(message, { duration: 3000 });
 const failureLong = (message) => toast.error(message, { duration: 3000, style: { minWidth: '380px' } });
@@ -116,10 +117,11 @@ const ManageFaculty = () => {
     };
 
     const CheckInputValidity = () => {
-        if (facultyDetails.name === '' || facultyDetails.post === '' || facultyDetails.bio === '') {
+        if (facultyDetails.name === '' || facultyDetails.profileUrl === '' || facultyDetails.bio === '') {
             failure('Please fill all the fields');
-        }
-        else if (facultyDetails.name.length < 5) {
+        } else if (facultyDetails.post === '') {
+            failure('Please select the post of the faculty');
+        } else if (facultyDetails.name.length < 5) {
             failureLong('Name should be atleast 5 characters long');
         }
         else if (facultyDetails.bio.length < 10) {
@@ -179,8 +181,11 @@ const ManageFaculty = () => {
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="post"
                                         id="post"
+                                        defaultValue=''
                                     >
-                                        <option disabled selected>Select Post of the faculty</option>
+                                        <option disabled value=''>
+                                            Select Post of the faculty
+                                        </option>
                                         <option className='bg-white' value="hod">
                                             HOD
                                         </option>

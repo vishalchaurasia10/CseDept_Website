@@ -27,7 +27,7 @@ export const navbarDetails = [
     {
         title: "Important Links",
         url: "/importantlinks",
-        key: 5,
+        key: 6,
     },
 ]
 
