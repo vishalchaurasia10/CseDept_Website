@@ -62,7 +62,7 @@ const TimeTable = () => {
             (timetable.length == 0 ?
                 <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
                     <Image src='/images/error.gif' width={300} height={300} alt='notes' />
-                    <h1 className='text-5xl pb-8 px-4 text-center lg:px-6 font-jost font-extrabold'>No data has been uploaded</h1>
+                    <h1 className='text-3xl pb-8 px-4 text-center lg:px-6 font-jost font-extrabold'>No timetable has been uploaded</h1>
                 </div>
                 :
                 <motion.div
