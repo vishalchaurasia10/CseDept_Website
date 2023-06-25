@@ -110,14 +110,16 @@ const Units = () => {
                     variants={variants}
                     transition={{ duration: 0.5 }}
                 >
-                    <h1 className="text-7xl pb-8 lg:px-6 font-jost font-extrabold">Units</h1>
-                    <div className="wrapper flex flex-wrap">
+                    <div className="heading text-left w-full" >
+                        <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">Units</h1>
+                    </div>
+                    <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                         {subjectUnits.map((item) => {
                             const { unit, $id } = item;
                             return (
-                                <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
+                                <div key={$id} className="units mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
                                     <Link href={`/courses/${semester}/${subject}/${unit}`}>
-                                        <Image className="cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300" src="/images/folder.svg" width={300} height={300} alt="subjectFolder" />
+                                        <Image className="cursor-pointer w-36 lg:w-44 hover:scale-105 transition-all duration-300" src="/images/folder.svg" width={300} height={300} alt="subjectFolder" />
                                     </Link>
                                     <Link href={`/courses/${semester}/${subject}/${unit}`}>
                                         <h2 className="text-xl py-2 font-jost">{unit}</h2>
@@ -137,15 +139,17 @@ const Units = () => {
                 variants={variants}
                 transition={{ duration: 0.5 }}
             >
-                <h1 className="text-6xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold">Assignments</h1>
-                <div className="wrapper flex flex-wrap">
+                <div className="heading text-left w-full" >
+                    <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">Assignments</h1>
+                </div>
+                <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                     {assignmentUnits.map((item) => {
                         const { name, $id, url, extension, $updatedAt, subjectCode } = item;
                         const ext = extension.substring(1);
                         const dateTime = convertStringToDateTime($updatedAt);
                         const truncatedName = name.length > 20 ? `${name.substring(0, 20)}...` : name;
                         return (
-                            <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex justify-center">
+                            <div key={$id} className="assignments bg-[#D7D9DD] shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex justify-center">
                                 <Link className="w-1/2 flex items-center justify-center lg:mr-4" target="_blank" href={`${url}`}>
                                     <Image title="Click to view" className="cursor-pointer lg:w-52 hover:scale-105 transition-all duration-300" src={`/images/extensions/${ext}.svg`} width={300} height={300} alt="subjectFolder" />
                                 </Link>

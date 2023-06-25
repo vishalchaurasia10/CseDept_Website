@@ -84,22 +84,24 @@ const Subject = () => {
                 </div>
             ) : (
                 <motion.div
-                    className="semesters lg:px-28 px-4 pt-20 md:pt-28 font-jost"
+                    className="semesters lg:px-28 px-4 pt-20 md:pt-28 flex flex-col items-center justify-center font-jost"
                     ref={ref}
                     initial="hidden"
                     animate={inView ? "visible" : "hidden"}
                     variants={variants}
                     transition={{ duration: 0.5 }}
                 >
-                    <h1 className="text-7xl pb-8 lg:px-6 font-jost font-extrabold">Subjects</h1>
-                    <div className="wrapper flex flex-wrap">
+                    <div className="heading text-left w-full" >
+                        <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">Subjects</h1>
+                    </div>
+                    <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                         {data.subjects.map((item) => {
                             const { subjectCode, $id } = item;
                             return (
-                                <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
+                                <div key={$id} className="subject mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
                                     <Link href={`/courses/${semester}/${subjectCode}`}>
                                         <Image
-                                            className="cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300"
+                                            className="cursor-pointer w-36 lg:w-44 hover:scale-105 transition-all duration-300"
                                             src="/images/folder.svg"
                                             width={300}
                                             height={300}
@@ -132,15 +134,17 @@ const Subject = () => {
                     variants={variants}
                     transition={{ duration: 0.5 }}
                 >
-                    <h1 className="text-6xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold">Assignments</h1>
-                    <div className="wrapper flex flex-wrap">
+                    <div className="heading text-left w-full" >
+                        <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">Assignments</h1>
+                    </div>
+                    <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                         {data.assignments.map((item) => {
                             const { subjectCode, $id } = item;
                             return (
-                                <div key={$id} className="semester mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
+                                <div key={$id} className="assignments mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
                                     <Link href={`/courses/${semester}/${subjectCode}`}>
                                         <Image
-                                            className="cursor-pointer w-40 lg:w-52 hover:scale-105 transition-all duration-300"
+                                            className="cursor-pointer w-36 lg:w-44 hover:scale-105 transition-all duration-300"
                                             src="/images/folder.svg"
                                             width={300}
                                             height={300}

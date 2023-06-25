@@ -90,7 +90,7 @@ const Notes = () => {
                         animate={inView ? 'visible' : 'hidden'}
                         variants={variants}
                         transition={{ duration: 0.5 }}>
-                        <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>{unit ? unit.toUpperCase() : ''}</h1>
+                        <h1 className='text-5xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold'>{unit ? unit.toUpperCase() : ''}</h1>
                         <div className="wrapper flex flex-wrap">
                             {subjectNotes.map((item) => {
                                 const { name, $id, url, extension, $updatedAt, subjectCode } = item;
