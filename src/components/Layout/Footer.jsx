@@ -55,6 +55,15 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
+            <div className="developer flex flex-col lg:flex-row lg:w-full">
+                <div className="copyright px-4 lg:px-28 flex justify-start  lg:w-[60%] md:px-14 pb-5 lg:pb-1 bg-[#262626]">
+                    <p className='lg:text-center text-lg whitespace-nowrap text-white pb-2'>© {new Date().getFullYear()} CSE, MSRIT. All rights reserved.</p>
+                </div>
+                <div className="name pb-6 flex items-center space-x-2 pl-4 pr-20 lg:justify-end lg:w-[40%] bg-[#262626]">
+                    <FaGlobeAmericas className='text-xl text-white' />
+                    <p className='text-white text-md text-center'><a className='hover:underline whitespace-nowrap' href="https://www.linkedin.com/in/vishal-chaurasia-9a421022a/" target='_blank'>Developed by Vishal Chaurasia</a></p>
+                </div>
+            </div>
         </>
     )
 }
