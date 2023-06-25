@@ -3,6 +3,7 @@ import Hero from "@/components/Content/Home/Hero";
 import Hod from "@/components/Content/Home/Hod";
 import Industry from "@/components/Content/Home/Industry";
 import Vision from "@/components/Content/Home/Vision";
+import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -27,12 +28,13 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(isLoading);
-  }, [isLoading]);
-
   return (
     <>
+      <Head>
+        <title>Home | Department of Computer Science and Engineering</title>
+        <meta name="description" content="Department of Computer Science and Engineering, MSRIT" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {isLoading ? (
         <div className="loading flex items-center justify-center h-screen">
           <Image src="/images/loading.gif" width={300} height={300} alt="loading" />
