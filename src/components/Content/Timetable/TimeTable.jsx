@@ -72,7 +72,7 @@ const TimeTable = () => {
                     animate={inView ? 'visible' : 'hidden'}
                     variants={variants}
                     transition={{ duration: 0.5 }}>
-                    <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>TimeTable</h1>
+                    <h1 className='text-5xl md:text-6xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold'>TimeTable</h1>
                     <div className="wrapper flex flex-wrap">
                         {timetable.map((item) => {
                             const { semester, $id, url, section, $updatedAt } = item;

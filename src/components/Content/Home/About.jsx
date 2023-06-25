@@ -6,7 +6,7 @@ const About = () => {
 
     const [ref, inView] = useInView({
         triggerOnce: true, // Only trigger the animation once
-        threshold: 0.5, // Customize the threshold for triggering the animation
+        threshold: 0.3, // Customize the threshold for triggering the animation
     });
 
     const variants = {

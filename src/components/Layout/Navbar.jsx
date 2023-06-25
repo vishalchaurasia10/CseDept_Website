@@ -53,7 +53,7 @@ const Navbar = () => {
                 </div>
             </nav >
 
-            <div className={`expanded lg:hidden w-full text-white z-[15] h-screen flex flex-col items-center justify-center backdrop-blur-3xl fixed top-0 transition-all duration-500 ${navExpand ? '' : 'translate-x-[60rem]'}`}>
+            <div className={`expanded lg:hidden w-full ${router.pathname.includes('/[unit]') ? 'text-black' : (router.pathname.includes('/courses') ? 'text-gray-400' : 'text-white')} z-[15] h-screen flex flex-col items-center justify-center backdrop-blur-3xl fixed top-0 transition-all duration-500 ${navExpand ? '' : 'translate-x-[60rem]'}`}>
                 <h1 className={`logo font-jost my-4 font-extrabold text-5xl`}>Msrit<span className='text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500'>CSE</span> </h1>
                 <ul className={`flex text-2xl space-y-4 flex-col justify-center font-jost text-center items-center`}>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/'>Home</Link></li>

@@ -73,7 +73,7 @@ const TimeTable = () => {
             animate={inView ? 'visible' : 'hidden'}
             variants={variants}
             transition={{ duration: 0.5 }}>
-            <h1 className='text-5xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Announcements</h1>
+            <h1 className='text-5xl md:text-6xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Announcements</h1>
             <div className="wrapper flex flex-wrap">
               {announcements.map((item) => {
                 const { date, description, title, venue, $id, url, $updatedAt } = item;

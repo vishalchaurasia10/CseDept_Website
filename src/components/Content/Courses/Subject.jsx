@@ -119,7 +119,7 @@ const Subject = () => {
             )}
 
             {data.assignments.length === 0 && data.subjects.length === 0 ? (
-                'No assignments or subjects available'
+                ''
             ) : data.assignments.length === 0 ? (
                 <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
                     <Image src="/images/error.gif" width={300} height={300} alt="notes" />

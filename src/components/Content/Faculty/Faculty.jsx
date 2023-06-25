@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Link from 'next/link';
 import facultyContext from '@/context/faculty/facultyContext';
 import { FaArrowRight } from 'react-icons/fa';
@@ -13,6 +13,8 @@ const Faculty = () => {
     const { faculty, fetchFaculty } = FacultyContext;
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
+    const [isMobile, setIsMobile] = useState(false);
+
 
     const [ref, inView] = useInView({
         triggerOnce: true, // Only trigger the animation once
@@ -29,6 +31,22 @@ const Faculty = () => {
             fetchFaculty();
     }, [])
 
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        // Add event listener to detect window resize
+        window.addEventListener('resize', handleResize);
+
+        // Initial check on component mount
+        handleResize();
+
+        // Clean up the event listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     function capitalizeWords(str) {
         // Split the string into an array of words
@@ -66,10 +84,11 @@ const Faculty = () => {
                     animate={inView ? 'visible' : 'hidden'}
                     variants={variants}
                     transition={{ duration: 0.5 }}>
-                    <h1 className='text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Faculties</h1>
+                    <h1 className='text-5xl md:text-6xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Faculties</h1>
                     <div className="wrapper flex flex-wrap">
                         {faculty.length > 0 && faculty.map((item) => {
                             const { $id, name, bio, post, profileUrl, url } = item;
+                            const truncatedBio = bio.length > 80 ? `${bio.substring(0, 80)}...` : bio;
                             return (
                                 <>
                                     <div key={$id} className="semester bg-[#D7D9DD] font-jost shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-1 lg:mx-5 lg:space-x-6 flex flex-col md:flex-row w-full lg:w-full">
@@ -81,8 +100,8 @@ const Faculty = () => {
                                             {post.length > 0 && <div title={post} className="codeDetails flex">
                                                 <p className='text-lg font-light'>{post === 'hod' ? 'Head of the Department(HOD)' : post}</p>
                                             </div>}
-                                            {bio.length > 0 && <div title={`bio`} className="codeDetails py-2 lg:py-4 mb-1">
-                                                <p className='font-jost text-xl text-justify'>{bio}</p>
+                                            {bio.length > 0 && <div title={`${bio}`} className="codeDetails py-2 lg:py-4 mb-1">
+                                                <p className='font-jost text-xl text-justify'>{isMobile ? truncatedBio : bio}</p>
                                             </div>}
                                             {profileUrl.length > 0 && <div title={`Full Bio`} className="codeDetails flex">
                                                 <Link target='_blank' href={`${profileUrl}`}>
