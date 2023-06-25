@@ -33,7 +33,7 @@ const SignUp = () => {
 
             await account.createEmailSession(credentials.email, credentials.password);
 
-            const verificationResponse = await account.createVerification('http://localhost:3000/');
+            const verificationResponse = await account.createVerification('https://cse-dept-website.vercel.app/');
 
             toast.promise(
                 Promise.resolve(verificationResponse), // Use `Promise.resolve` to create a resolved promise with the fileId
