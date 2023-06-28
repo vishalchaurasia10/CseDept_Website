@@ -75,6 +75,7 @@ const Navbar = () => {
 
             if (response !== null) {
                 setRole({ name: '', email: '', status: false, role: 'student' })
+                router.push('/sign-in')
             }
 
         } catch (error) {
