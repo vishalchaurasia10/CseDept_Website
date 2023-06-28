@@ -1,18 +1,100 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { navbarDetails } from '@/utils/constants';
 import Button from './Button';
 import Image from 'next/image';
+import roleContext from '@/context/role/roleContext';
+import { FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
+import { Client, Account, Databases, Query } from "appwrite";
 
 const Navbar = () => {
 
     const router = useRouter();
     const [navExpand, setNavExpand] = useState(false)
+    const [showDetails, setShowDetails] = useState(false)
+    const RoleContext = useContext(roleContext)
+    const { role, setRole } = RoleContext
 
     const expandNav = () => {
         setNavExpand(!navExpand)
     }
+
+    const expandDetails = () => {
+        setShowDetails(!showDetails)
+    }
+
+    const checkVerification = async () => {
+        try {
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+            const account = new Account(client);
+
+            const response = await account.get();
+
+            console.log(response)
+
+            if (response !== null) {
+                setRole({ name: response.name, email: response.email, status: response.emailVerification, })
+                decideRole(response.$id)
+                console.log('setting')
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const decideRole = async (id) => {
+        try {
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+            const databases = new Databases(client);
+
+            const response = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USERS_COLLECTION_ID, [Query.search('id', id)]
+            );
+
+            console.log(response.documents[0].role)
+
+            if (response.documents[0].role === 'admin') {
+                setRole((prevRole) => ({ ...prevRole, role: 'admin' }));
+            } else if (response.documents[0].role === 'faculty') {
+                setRole((prevRole) => ({ ...prevRole, role: 'faculty' }));
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const signOut = async () => {
+        try {
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+            const account = new Account(client);
+
+            const response = await account.deleteSession('current');
+
+            console.log(response)
+
+            if (response !== null) {
+                setRole({ name: '', email: '', status: false, role: 'student' })
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        console.log(role)
+    }, [role])
+
+    useEffect(() => {
+        checkVerification()
+    }, [])
 
     return (
         <>
@@ -43,7 +125,30 @@ const Navbar = () => {
                 </div>
 
                 <div className="right w-3/4 lg:-mt-1 lg:w-full flex justify-end">
-                    <Button destination='/adminPanel' content='Admin' />
+                    {role.role === 'student' ?
+                        <Button destination='/sign-in' content='LogIn' />
+                        :
+                        <div onClick={expandDetails} className={`relative flex items-center space-x-3`}>
+                            <Button destination='/adminPanel' content='Upload' />
+                            <FaUserCircle className='text-2xl hover:scale-110 transition-all duration-300 cursor-pointer' />
+                            <div className={`credentials ${showDetails?'opacity-100':'opacity-0'} transition-all duration-300 py-4 pb-6 bg-pureWhite text-[#565656] font-jost rounded-2xl shadow-2xl shadow-black absolute right-0 top-14 text-sm tracking-wide space-y-1`}>
+                                <div className="name py-2 px-10">
+                                    <p className='font-bold text-black -mb-1' title={role.name} >{role.name}</p>
+                                    <p className='text-[#565656] text-sm font-extralight' title={role.email}>{role.email}</p>
+                                </div>
+                                <div className="status py-2 px-10 hover:bg-[#f5f5f5]">
+                                    <p>Status : {role.status ? 'verified' : 'unverified'}</p>
+                                </div>
+                                <div className="role py-2 px-10 hover:bg-[#f5f5f5]">
+                                    <p>Role : {role.role}</p>
+                                </div>
+                                <div onClick={signOut} className="signout cursor-pointer py-2 px-10 hover:bg-[#f5f5f5]">
+                                    <FaSignOutAlt className='text-lg inline mr-2' />
+                                    <p className='inline'>Sign Out</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <div className="hamburger relative -mr-2 ml-2 lg:hidden space-y-1">

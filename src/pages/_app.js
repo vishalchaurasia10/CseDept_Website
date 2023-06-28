@@ -8,27 +8,30 @@ import LoadingState from '@/context/loading/LoadingState'
 import '@/styles/globals.css'
 import ImportantlinkState from '@/context/importantLinks/ImportantlinkState'
 import AssignmentState from '@/context/assignments/AssignmentState'
+import RoleState from '@/context/role/RoleState'
 
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <Navbar />
-      <LoadingState>
-        <AnnouncementState>
-          <NoteState>
-            <AssignmentState>
-              <FacultyState>
-                <TimetableState>
-                  <ImportantlinkState>
-                    <Component {...pageProps} />
-                  </ImportantlinkState>
-                </TimetableState>
-              </FacultyState>
-            </AssignmentState>
-          </NoteState>
-        </AnnouncementState>
-      </LoadingState>
-      <Footer />
+      <RoleState>
+        <Navbar />
+        <LoadingState>
+          <AnnouncementState>
+            <NoteState>
+              <AssignmentState>
+                <FacultyState>
+                  <TimetableState>
+                    <ImportantlinkState>
+                      <Component {...pageProps} />
+                    </ImportantlinkState>
+                  </TimetableState>
+                </FacultyState>
+              </AssignmentState>
+            </NoteState>
+          </AnnouncementState>
+        </LoadingState>
+        <Footer />
+      </RoleState>
     </>
   )
 }
