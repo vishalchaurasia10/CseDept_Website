@@ -10,7 +10,7 @@ import { useInView } from 'react-intersection-observer';
 const Notes = () => {
     const [subjectNotes, setSubjectNotes] = useState([]);
     const NoteContext = useContext(noteContext);
-    const { notes, fetchNotes } = NoteContext;
+    const { notes, fetchSemestersNotes } = NoteContext;
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
     const router = useRouter();
@@ -27,18 +27,24 @@ const Notes = () => {
     };
 
     useEffect(() => {
-        if (notes.length === 0) {
-            fetchNotes().then(() => {
-                applyFilter();
-            });
+        if (notes.length === 0 || targetSemester !== notes[0]?.semester) {
+            fetchNotesData();
         } else {
             applyFilter();
         }
-    }, [notes, fetchNotes]);
+    }, [targetSemester]);
+
+    useEffect(() => {
+        applyFilter();
+    }, [notes]);
+
+    const fetchNotesData = async () => {
+        await fetchSemestersNotes(targetSemester, subject, -1);
+    };
 
     const applyFilter = () => {
         const filteredNotes = notes.filter(
-            (note) => note.semester === targetSemester && note.subjectCode === subject && note.unit === unit
+            (note) => note.subjectCode === subject && note.unit === unit
         );
         setSubjectNotes(filteredNotes);
     };

@@ -1,8 +1,7 @@
 import Image from 'next/image'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { semesterDetails } from '@/utils/constants';
 import Link from 'next/link';
-import noteContext from '@/context/notes/noteContext';
 import loadingContext from '@/context/loading/loadingContext';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -19,15 +18,8 @@ const Semester = () => {
         visible: { opacity: 1, y: 0 },
     };
 
-    const NoteContext = useContext(noteContext);
-    const { notes, fetchNotes } = NoteContext;
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
-
-    useEffect(() => {
-        if (notes.length === 0)
-            fetchNotes();
-    }, [])
 
     return (
         <>

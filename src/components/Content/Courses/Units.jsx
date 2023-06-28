@@ -12,11 +12,11 @@ const Units = () => {
     const [subjectUnits, setSubjectUnits] = useState([]);
     const [assignmentUnits, setAssignmentUnits] = useState([]);
     const NoteContext = useContext(noteContext);
-    const { notes, fetchNotes } = NoteContext;
+    const { notes, fetchSemestersNotes } = NoteContext;
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
     const AssignmentContext = useContext(assignmentContext);
-    const { assignment, fetchAssignment } = AssignmentContext;
+    const { assignment, fetchSemestersAssignments } = AssignmentContext;
     const router = useRouter();
     const { semester, subject } = router.query;
     const targetSemester = semester ? semester[semester.length - 1] : null;
@@ -31,32 +31,45 @@ const Units = () => {
     };
 
     useEffect(() => {
-        if (notes.length === 0) {
-            fetchNotes().then(() => {
-                applyFilter();
-            });
+        if (notes.length === 0 || targetSemester !== notes[0]?.semester) {
+            fetchNotesData();
         } else {
             applyFilter();
         }
 
-        if (assignment.length === 0) {
-            fetchAssignment().then(() => {
-                applyAssignmentFilter();
-            });
+        if (assignment.length === 0 || targetSemester !== assignment[0]?.semester) {
+            fetchAssignmentData();
         } else {
-            applyAssignmentFilter();
+            setAssignmentUnits(assignment);
         }
-    }, []);
+    }, [targetSemester]);
+
+    useEffect(() => {
+        applyFilter();
+    }, [notes]);
+
+    useEffect(() => {
+        applyAssignmentFilter();
+    }, [assignment]);
+
+    const fetchNotesData = async () => {
+        await fetchSemestersNotes(targetSemester, subject, -1);
+    };
+
+    const fetchAssignmentData = async () => {
+        await fetchSemestersAssignments(targetSemester, subject);
+    };
 
     const applyFilter = () => {
         const uniqueUnits = new Set();
         const filteredUnits = notes.filter((note) => {
-            if (note.semester === targetSemester && note.subjectCode === subject && !uniqueUnits.has(note.unit)) {
+            if (note.subjectCode === subject && !uniqueUnits.has(note.unit)) {
                 uniqueUnits.add(note.unit);
                 return true;
             }
             return false;
         });
+        console.log(filteredUnits);
         setSubjectUnits(filteredUnits);
     };
 
@@ -78,14 +91,7 @@ const Units = () => {
     const applyAssignmentFilter = () => {
         const uniqueAssignments = new Set();
         if (assignment.length !== 0) {
-            const filteredAssignments = assignment.filter((assignment) => {
-                if (assignment.semester === targetSemester && assignment.subjectCode === subject && !uniqueAssignments.has(assignment.unit)) {
-                    uniqueAssignments.add(assignment.unit);
-                    return true;
-                }
-                return false;
-            });
-            setAssignmentUnits(filteredAssignments);
+            setAssignmentUnits(assignment);
         }
     };
 
@@ -132,8 +138,8 @@ const Units = () => {
             )}
 
             {assignmentUnits.length === 0 ?
-                <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
-                    <Image src="/images/error.gif" width={300} height={300} alt="notes" />
+                <div className="404 lg:px-28 flex space-y-5 flex-col items-center lg:items-start justify-center my-14">
+                    <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">Assignments</h1>
                     <h1 className="text-3xl pb-8 px-4 text-center lg:px-6 font-jost font-extrabold">No assignment has been uploaded</h1>
                 </div>
                 :

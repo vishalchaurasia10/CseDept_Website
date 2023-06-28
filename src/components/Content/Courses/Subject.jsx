@@ -11,11 +11,11 @@ import { useInView } from 'react-intersection-observer';
 const Subject = () => {
     const [data, setData] = useState({ subjects: [], assignments: [] });
     const NoteContext = useContext(noteContext);
-    const { notes, fetchNotes } = NoteContext;
+    const { notes, fetchSemestersNotes } = NoteContext;
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
     const AssignmentContext = useContext(assignmentContext);
-    const { assignment, fetchAssignment } = AssignmentContext;
+    const { assignment, fetchSemestersAssignments } = AssignmentContext;
     const router = useRouter();
     const { semester } = router.query;
     const targetSemester = semester ? semester[semester.length - 1] : null;
@@ -30,19 +30,35 @@ const Subject = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            await Promise.all([fetchNotes(), fetchAssignment()]);
-            applyFilter();
-            applyAssignmentFilter();
-        };
-
-        if (notes.length === 0 || assignment.length === 0) {
-            fetchData();
+        if (notes.length === 0 || targetSemester !== notes[0]?.semester) {
+            fetchNotesData();
         } else {
             applyFilter();
+        }
+
+        if (assignment.length === 0 || targetSemester !== assignment[0]?.semester) {
+            fetchAssignmentData();
+        } else {
             applyAssignmentFilter();
         }
-    }, []);
+    }, [targetSemester]);
+
+    useEffect(() => {
+        applyFilter();
+    }, [notes]);
+
+    useEffect(() => {
+        applyAssignmentFilter();
+    }, [assignment]);
+
+    const fetchNotesData = async () => {
+        // await Promise.all([fetchSemestersNotes(targetSemester), fetchSemestersAssignments(targetSemester)]);
+        await fetchSemestersNotes(targetSemester, -1, -1);
+    };
+
+    const fetchAssignmentData = async () => {
+        await fetchSemestersAssignments(targetSemester,-1);
+    };
 
     const applyFilter = () => {
         const uniqueSubjects = new Set();
@@ -62,7 +78,7 @@ const Subject = () => {
         if (assignment.length !== 0) {
             const filteredAssignments = assignment.filter((assignment) => {
                 if (assignment.semester === targetSemester && !uniqueAssignments.has(assignment.subjectCode)) {
-                    uniqueAssignments.add(assignment.unit);
+                    uniqueAssignments.add(assignment.subjectCode);
                     return true;
                 }
                 return false;
@@ -70,6 +86,7 @@ const Subject = () => {
             setData((prevData) => ({ ...prevData, assignments: filteredAssignments }));
         }
     };
+
 
     return (
         <>
@@ -121,8 +138,8 @@ const Subject = () => {
             {data.assignments.length === 0 && data.subjects.length === 0 ? (
                 ''
             ) : data.assignments.length === 0 ? (
-                <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
-                    <Image src="/images/error.gif" width={300} height={300} alt="notes" />
+                <div className="404 lg:px-28 flex space-y-5 flex-col items-center lg:items-start justify-center my-14">
+                    <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">Assignments</h1>
                     <h1 className="text-3xl pb-8 px-4 text-center lg:px-6 font-jost font-extrabold">No assignment has been uploaded</h1>
                 </div>
             ) : (
