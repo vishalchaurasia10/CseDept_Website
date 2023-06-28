@@ -69,7 +69,6 @@ const Units = () => {
             }
             return false;
         });
-        console.log(filteredUnits);
         setSubjectUnits(filteredUnits);
     };
 
@@ -90,9 +89,15 @@ const Units = () => {
 
     const applyAssignmentFilter = () => {
         const uniqueAssignments = new Set();
-        if (assignment.length !== 0) {
-            setAssignmentUnits(assignment);
-        }
+        const filteredAssignments = assignment.filter((assignment) => {
+            if (assignment.subjectCode === subject && assignment.length !== 0) {
+                uniqueAssignments.add(assignment.unit);
+                return true;
+            }
+            return false;
+        });
+        setAssignmentUnits(filteredAssignments);
+
     };
 
     return (

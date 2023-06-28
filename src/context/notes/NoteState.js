@@ -55,7 +55,6 @@ const NoteState = (props) => {
             }
 
             setNotes(result.documents);
-            console.log(result.documents);
             setLoading(false);
         } catch (error) {
             console.log(error);
