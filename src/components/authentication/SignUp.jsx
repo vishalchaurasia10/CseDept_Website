@@ -3,9 +3,11 @@ import React, { useState } from 'react'
 import { FaEnvelope, FaLock, FaUser } from 'react-icons/fa'
 import { Client, Account, ID, Databases } from "appwrite";
 import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 const SignUp = () => {
     const [credentials, setCredentials] = useState({ name: '', email: '', password: '', secretKey: '' })
+    const router = useRouter()
 
     const onChangeHandler = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -45,12 +47,12 @@ const SignUp = () => {
 
             await account.createEmailSession(credentials.email, credentials.password);
 
-            const verificationResponse = await account.createVerification('http://localhost:3000/');
+            const verificationResponse = await account.createVerification('https://cse-dept-website.vercel.app/');
 
             toast.promise(
                 Promise.resolve(verificationResponse), // Use `Promise.resolve` to create a resolved promise with the fileId
                 {
-                    success: () => 'Verification link sent successfully.',
+                    success: () => 'Verification link sent to your email.',
                     error: () => 'Error sending the verification link.',
                     duration: 3000,
                     position: 'top-center',
@@ -58,6 +60,7 @@ const SignUp = () => {
             );
 
             setCredentials({ name: '', email: '', password: '', secretKey: '' })
+            router.push('/sign-in')
 
         } catch (error) {
             toast.error(error.message)

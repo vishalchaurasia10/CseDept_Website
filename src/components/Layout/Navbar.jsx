@@ -33,12 +33,9 @@ const Navbar = () => {
 
             const response = await account.get();
 
-            console.log(response)
-
             if (response !== null) {
                 setRole({ name: response.name, email: response.email, status: response.emailVerification, })
                 decideRole(response.$id)
-                console.log('setting')
             }
 
         } catch (error) {
@@ -56,7 +53,6 @@ const Navbar = () => {
             const response = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USERS_COLLECTION_ID, [Query.search('id', id)]
             );
 
-            console.log(response.documents[0].role)
 
             if (response.documents[0].role === 'admin') {
                 setRole((prevRole) => ({ ...prevRole, role: 'admin' }));
@@ -77,8 +73,6 @@ const Navbar = () => {
 
             const response = await account.deleteSession('current');
 
-            console.log(response)
-
             if (response !== null) {
                 setRole({ name: '', email: '', status: false, role: 'student' })
             }
@@ -87,10 +81,6 @@ const Navbar = () => {
             console.log(error)
         }
     }
-
-    useEffect(() => {
-        console.log(role)
-    }, [role])
 
     useEffect(() => {
         checkVerification()
@@ -131,7 +121,7 @@ const Navbar = () => {
                         <div onClick={expandDetails} className={`relative flex items-center space-x-3`}>
                             <Button destination='/adminPanel' content='Upload' />
                             <FaUserCircle className='text-2xl hover:scale-110 transition-all duration-300 cursor-pointer' />
-                            <div className={`credentials ${showDetails?'opacity-100':'opacity-0'} transition-all duration-300 py-4 pb-6 bg-pureWhite text-[#565656] font-jost rounded-2xl shadow-2xl shadow-black absolute right-0 top-14 text-sm tracking-wide space-y-1`}>
+                            <div className={`credentials ${showDetails ? 'opacity-100' : 'opacity-0'} transition-all duration-300 py-4 pb-6 bg-pureWhite text-[#565656] font-jost rounded-2xl shadow-2xl shadow-black absolute right-0 top-14 text-sm tracking-wide space-y-1`}>
                                 <div className="name py-2 px-10">
                                     <p className='font-bold text-black -mb-1' title={role.name} >{role.name}</p>
                                     <p className='text-[#565656] text-sm font-extralight' title={role.email}>{role.email}</p>
