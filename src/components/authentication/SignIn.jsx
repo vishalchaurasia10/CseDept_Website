@@ -1,13 +1,16 @@
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { FaEnvelope, FaLock } from 'react-icons/fa'
-import { Client, Account } from "appwrite";
+import { Client, Account, Databases, Query } from "appwrite";
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import roleContext from '@/context/role/roleContext';
 
 const SignIn = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' })
   const router = useRouter()
+  const RoleContext = useContext(roleContext)
+  const { setRole } = RoleContext
 
   const onChangeHandler = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -28,6 +31,9 @@ const SignIn = () => {
       if (response.emailVerification === false) {
         toast.error('Please verify your email first')
       } else {
+        setRole({ name: response.name, email: response.email, status: response.emailVerification, })
+        decideRole(response.$id)
+
         router.push('/adminPanel')
         toast.success('Logged in successfully')
       }
@@ -38,6 +44,27 @@ const SignIn = () => {
       toast.error(error.message)
     }
   }
+
+  const decideRole = async (id) => {
+    try {
+        const client = new Client()
+            .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+            .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+        const databases = new Databases(client);
+
+        const response = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USERS_COLLECTION_ID, [Query.search('id', id)]
+        );
+
+
+        if (response.documents[0].role === 'admin') {
+            setRole((prevRole) => ({ ...prevRole, role: 'admin' }));
+        } else if (response.documents[0].role === 'faculty') {
+            setRole((prevRole) => ({ ...prevRole, role: 'faculty' }));
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
   const checkValidity = (e) => {
     e.preventDefault()
