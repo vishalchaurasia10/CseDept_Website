@@ -122,7 +122,7 @@ const Navbar = () => {
                         <div className={`relative flex items-center space-x-3`}>
                             <Button destination='/adminPanel' content='Upload' />
                             <FaUserCircle onClick={expandDetails} className='text-2xl hover:scale-110 transition-all duration-300 cursor-pointer' />
-                            <div className={`credentials ${showDetails ? 'opacity-100' : 'opacity-0'} transition-all duration-300 py-4 pb-6 bg-pureWhite text-[#565656] font-jost rounded-2xl shadow-2xl shadow-black absolute right-0 top-14 text-sm tracking-wide space-y-1`}>
+                            <div className={`credentials ${showDetails ? 'opacity-100' : 'opacity-0 scale-0'} transition-all duration-300 py-4 pb-6 bg-pureWhite text-[#565656] font-jost rounded-2xl shadow-2xl shadow-black absolute right-0 top-14 text-sm tracking-wide space-y-1`}>
                                 <div className="name py-2 px-10">
                                     <p className='font-bold text-black -mb-1' title={role.name} >{role.name}</p>
                                     <p className='text-[#565656] text-sm font-extralight' title={role.email}>{role.email}</p>

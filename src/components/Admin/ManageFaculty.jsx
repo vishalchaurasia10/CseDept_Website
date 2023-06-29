@@ -96,15 +96,15 @@ const ManageFaculty = () => {
             toast.promise(
                 Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
                 {
-                    success: () => 'Notes successfully uploaded!',
-                    error: () => 'Error uploading notes.',
+                    success: () => 'Faculty data successfully uploaded!',
+                    error: () => 'Error uploading faculty data.',
                     duration: 3000,
                     position: 'top-center',
                 }
             );
 
         } catch (error) {
-            failure('Something went wrong');
+            failure(error.message);
         }
 
         setFacultyDetails({

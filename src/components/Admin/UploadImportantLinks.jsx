@@ -37,15 +37,15 @@ const UploadImportantLinks = () => {
             toast.promise(
                 Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
                 {
-                    success: () => 'TimeTable successfully uploaded!',
-                    error: () => 'Error uploading TimeTable.',
+                    success: () => 'Link successfully uploaded!',
+                    error: () => 'Error uploading Link.',
                     duration: 3000,
                     position: 'top-center',
                 }
             );
 
         } catch (error) {
-            failure('Something went wrong');
+            failure(error.message);
             setLoading(false);
         }
 

@@ -45,8 +45,8 @@ const UploadTimeTable = () => {
             toast.promise(
                 Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
                 {
-                    success: () => 'File successfully uploaded!',
-                    error: () => 'Error uploading file.',
+                    success: () => 'TimeTable successfully uploaded!',
+                    error: () => 'Error uploading timetable.',
                     duration: 3000,
                     position: 'top-center',
                 }
@@ -55,7 +55,7 @@ const UploadTimeTable = () => {
             fileInput.value = null; // Clear the file input value after successful upload
             setLoading(false);
         } catch (error) {
-            failure('Something went wrong');
+            failure(error.message);
             setLoading(false);
         }
     };
