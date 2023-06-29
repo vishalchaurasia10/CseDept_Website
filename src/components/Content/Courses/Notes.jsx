@@ -14,7 +14,7 @@ const Notes = () => {
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
     const router = useRouter();
-    const { semester, subject, unit } = router.query;
+    const { semester, subject, unit, course } = router.query;
     const targetSemester = semester ? semester[semester.length - 1] : null;
     const [ref, inView] = useInView({
         triggerOnce: true, // Only trigger the animation once
@@ -44,10 +44,22 @@ const Notes = () => {
 
     const applyFilter = () => {
         const filteredNotes = notes.filter(
-            (note) => note.subjectCode === subject && note.unit === unit
+            (note) => note.subjectCode === subject && note.course === course && note.unit === unit
         );
         setSubjectNotes(filteredNotes);
     };
+
+    // const applyFilter = () => {
+    //     const uniqueUnits = new Set();
+    //     const filteredUnits = notes.filter((note) => {
+    //         if (note.subjectCode === subject && note.course === course && !uniqueUnits.has(note.unit)) {
+    //             uniqueUnits.add(note.unit);
+    //             return true;
+    //         }
+    //         return false;
+    //     });
+    //     setSubjectNotes(filteredUnits);
+    // };
 
     function convertStringToDateTime(dateTimeString) {
         const dateTime = new Date(dateTimeString);

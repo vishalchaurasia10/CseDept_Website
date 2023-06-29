@@ -38,7 +38,11 @@ const NoteState = (props) => {
 
             let query1, result;
 
-            if (subjectCode === -1 && unit === -1) {
+            if (semester === -1 && subjectCode === -1 && unit === -1) {
+
+                result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID,);
+
+            } else if (subjectCode === -1 && unit === -1) {
 
                 query1 = Query.equal('semester', `${semester}`)
                 result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID, [query1]);

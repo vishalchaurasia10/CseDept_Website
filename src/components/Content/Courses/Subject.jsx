@@ -18,11 +18,13 @@ const Subject = () => {
     const { assignment, fetchSemestersAssignments } = AssignmentContext;
     const router = useRouter();
     const { semester } = router.query;
+    const {course} = router.query;
     const targetSemester = semester ? semester[semester.length - 1] : null;
     const [ref, inView] = useInView({
         triggerOnce: true,
         threshold: 0.1,
     });
+
 
     const variants = {
         hidden: { opacity: 0, y: 20 },
@@ -63,7 +65,7 @@ const Subject = () => {
     const applyFilter = () => {
         const uniqueSubjects = new Set();
         const filteredSubjects = notes.filter((note) => {
-            if (note.semester === targetSemester && !uniqueSubjects.has(note.subjectCode)) {
+            if (note.semester === targetSemester && note.course === course && !uniqueSubjects.has(note.subjectCode)) {
                 uniqueSubjects.add(note.subjectCode);
                 return true;
             }
@@ -77,7 +79,7 @@ const Subject = () => {
         const uniqueAssignments = new Set();
         if (assignment.length !== 0) {
             const filteredAssignments = assignment.filter((assignment) => {
-                if (assignment.semester === targetSemester && !uniqueAssignments.has(assignment.subjectCode)) {
+                if (assignment.semester === targetSemester && assignment.course === course && !uniqueAssignments.has(assignment.subjectCode)) {
                     uniqueAssignments.add(assignment.subjectCode);
                     return true;
                 }
@@ -116,7 +118,7 @@ const Subject = () => {
                             const { subjectCode, $id } = item;
                             return (
                                 <div key={$id} className="subject mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
-                                    <Link href={`/courses/${semester}/${subjectCode}`}>
+                                    <Link href={`/courses/${course}/${semester}/${subjectCode}`}>
                                         <Image
                                             className="cursor-pointer w-36 lg:w-44 hover:scale-105 transition-all duration-300"
                                             src="/images/folder.svg"
@@ -125,7 +127,7 @@ const Subject = () => {
                                             alt="subjectFolder"
                                         />
                                     </Link>
-                                    <Link href={`/courses/${semester}/${subjectCode}`}>
+                                    <Link href={`/courses/${course}/${semester}/${subjectCode}`}>
                                         <h2 className=" text-xl py-2 font-jost">{subjectCode}</h2>
                                     </Link>
                                 </div>
@@ -159,7 +161,7 @@ const Subject = () => {
                             const { subjectCode, $id } = item;
                             return (
                                 <div key={$id} className="assignments mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
-                                    <Link href={`/courses/${semester}/${subjectCode}`}>
+                                    <Link href={`/courses/${course}/${semester}/${subjectCode}`}>
                                         <Image
                                             className="cursor-pointer w-36 lg:w-44 hover:scale-105 transition-all duration-300"
                                             src="/images/folder.svg"
@@ -168,7 +170,7 @@ const Subject = () => {
                                             alt="subjectFolder"
                                         />
                                     </Link>
-                                    <Link href={`/courses/${semester}/${subjectCode}`}>
+                                    <Link href={`/courses/${course}/${semester}/${subjectCode}`}>
                                         <h2 className=" text-xl py-2 font-jost">{subjectCode}</h2>
                                     </Link>
                                 </div>

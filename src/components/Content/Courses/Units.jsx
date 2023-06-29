@@ -18,7 +18,7 @@ const Units = () => {
     const AssignmentContext = useContext(assignmentContext);
     const { assignment, fetchSemestersAssignments } = AssignmentContext;
     const router = useRouter();
-    const { semester, subject } = router.query;
+    const { semester, subject, course } = router.query;
     const targetSemester = semester ? semester[semester.length - 1] : null;
     const [ref, inView] = useInView({
         triggerOnce: true,
@@ -63,7 +63,7 @@ const Units = () => {
     const applyFilter = () => {
         const uniqueUnits = new Set();
         const filteredUnits = notes.filter((note) => {
-            if (note.subjectCode === subject && !uniqueUnits.has(note.unit)) {
+            if (note.subjectCode === subject && note.course === course && !uniqueUnits.has(note.unit)) {
                 uniqueUnits.add(note.unit);
                 return true;
             }
@@ -90,7 +90,7 @@ const Units = () => {
     const applyAssignmentFilter = () => {
         const uniqueAssignments = new Set();
         const filteredAssignments = assignment.filter((assignment) => {
-            if (assignment.subjectCode === subject && assignment.length !== 0) {
+            if (assignment.subjectCode === subject && assignment.course === course && assignment.length !== 0) {
                 uniqueAssignments.add(assignment.unit);
                 return true;
             }
@@ -129,10 +129,10 @@ const Units = () => {
                             const { unit, $id } = item;
                             return (
                                 <div key={$id} className="units mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
-                                    <Link href={`/courses/${semester}/${subject}/${unit}`}>
+                                    <Link href={`/courses/${course}/${semester}/${subject}/${unit}`}>
                                         <Image className="cursor-pointer w-36 lg:w-44 hover:scale-105 transition-all duration-300" src="/images/folder.svg" width={300} height={300} alt="subjectFolder" />
                                     </Link>
-                                    <Link href={`/courses/${semester}/${subject}/${unit}`}>
+                                    <Link href={`/courses/${course}/${semester}/${subject}/${unit}`}>
                                         <h2 className="text-xl py-2 font-jost">{unit}</h2>
                                     </Link>
                                 </div>
