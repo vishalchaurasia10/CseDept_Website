@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FaEnvelope, FaLock } from 'react-icons/fa'
 import { Client, Account, Databases, Query } from "appwrite";
 import toast, { Toaster } from 'react-hot-toast';
@@ -10,7 +10,7 @@ const SignIn = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' })
   const router = useRouter()
   const RoleContext = useContext(roleContext)
-  const { setRole } = RoleContext
+  const { role,setRole } = RoleContext
 
   const onChangeHandler = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -79,6 +79,12 @@ const SignIn = () => {
       handleSubmit(e)
     }
   }
+
+  useEffect(() => {
+    if(role.role === 'admin' || role.role === 'faculty'){
+      router.push('/adminPanel')
+    }
+  }, [])
 
   return (
     <>

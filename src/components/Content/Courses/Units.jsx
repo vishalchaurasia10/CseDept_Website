@@ -122,7 +122,7 @@ const Units = () => {
                     transition={{ duration: 0.5 }}
                 >
                     <div className="heading text-left w-full" >
-                        <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">Units</h1>
+                        <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">{(subjectUnits[0].unit).includes('unit')?'Units':'Labs'}</h1>
                     </div>
                     <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                         {subjectUnits.map((item) => {

@@ -9,6 +9,7 @@ const failureLong = (message) => toast.error(message, { duration: 3000, style: {
 
 const UploadNotes = () => {
     const [loading, setLoading] = useState(false);
+    const [lab, setLab] = useState(false);
     const [notesDetails, setNotesDetails] = useState({
         name: '',
         subject: '',
@@ -16,7 +17,8 @@ const UploadNotes = () => {
         unit: '',
         semester: '',
         url: null,
-        extension: ''
+        extension: '',
+        course: ''
     });
 
     const handleFileUpload = async (e) => {
@@ -70,6 +72,12 @@ const UploadNotes = () => {
             ...prevDetails,
             [name]: value
         }));
+
+        if ((notesDetails.unit).includes('lab')) {
+            setLab(true);
+        } else {
+            setLab(false);
+        }
     };
 
     const handleInputSubmit = async () => {
@@ -91,7 +99,8 @@ const UploadNotes = () => {
                     unit: notesDetails.unit,
                     semester: notesDetails.semester,
                     url: notesDetails.url,
-                    extension: notesDetails.extension
+                    extension: notesDetails.extension,
+                    course: notesDetails.course
                 },
             );
 
@@ -119,7 +128,7 @@ const UploadNotes = () => {
     };
 
     const CheckValidity = () => {
-        if (notesDetails.name === '' || notesDetails.subject === '' || notesDetails.subjectCode === '' || notesDetails.unit === '') {
+        if (notesDetails.name === '' || notesDetails.subject === '' || notesDetails.subjectCode === '' || notesDetails.unit === '' || notesDetails.course === '') {
             failure('Please fill all the fields');
         } else if (notesDetails.semester === '') {
             failure('Please select the semester');
@@ -188,6 +197,32 @@ const UploadNotes = () => {
                                     <select
                                         onChange={handleInputChange}
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
+                                        name="course"
+                                        id="course"
+                                        defaultValue=''
+                                    >
+                                        <option disabled value=''>
+                                            Select Course
+                                        </option>
+                                        <option className='bg-white' value="ug">
+                                            UG
+                                        </option>
+                                        <option className=" bg-white" value="pg">
+                                            PG
+                                        </option>
+                                        <option className=" bg-white" value="vocational">
+                                            Vocational Courses
+                                        </option>
+                                        <option className=" bg-white" value="core">
+                                            Core Courses
+                                        </option>
+                                        <option className=" bg-white" value="open">
+                                            Open Electives
+                                        </option>
+                                    </select>
+                                    <select
+                                        onChange={handleInputChange}
+                                        className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="semester"
                                         id="semester"
                                         defaultValue=''
@@ -195,10 +230,16 @@ const UploadNotes = () => {
                                         <option disabled value=''>
                                             Select Semester
                                         </option>
+                                        <option className='bg-white' value="1">
+                                            Semester 1
+                                        </option>
+                                        <option className='bg-white' value="2">
+                                            Semester 2
+                                        </option>
                                         <option className='bg-white' value="3">
                                             Semester 3
                                         </option>
-                                        <option className=" bg-white" value="4">
+                                        <option className="bg-white" value="4">
                                             Semester 4
                                         </option>
                                         <option className="bg-white" value="5">
@@ -275,11 +316,21 @@ const UploadNotes = () => {
                                     placeholder="Enter the Subject Code..."
                                 />
 
-                                <div className="unitRadio lg:my-3 flex flex-wrap lg:space-x-3">
+                                <input
+                                    onChange={handleInputChange}
+                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
+                                    type="text"
+                                    name="unit"
+                                    id="LabCode"
+                                    value={notesDetails.unit}
+                                    placeholder="Enter the Lab if the file is related to lab..."
+                                />
+
+                                {lab ? '' : <div className="unitRadio lg:my-3 flex flex-wrap lg:space-x-3">
                                     {[1, 2, 3, 4, 5].map((unit) => (
                                         <label
                                             key={unit}
-                                            htmlFor={`unit${unit}`}
+                                            htmlFor={`other_unit${unit}`}
                                             className={`radioLabel ${notesDetails.unit === `unit${unit}` ? 'bg-[#b2b4b6]' : ''
                                                 } cursor-pointer transition-all duration-150 hover:shadow-2xl hover:-translate-y-1 hover:shadow-black hover:bg-[#b2b4b6]  border-2 border-[#b2b4b6] p-2 px-6 rounded-3xl mt-1 mr-2 lg:mr-0`}
                                         >
@@ -290,11 +341,11 @@ const UploadNotes = () => {
                                                 onChange={handleInputChange}
                                                 type="radio"
                                                 name="unit"
-                                                id={`unit${unit}`}
+                                                id={`other_unit${unit}`}
                                             />
                                         </label>
                                     ))}
-                                </div>
+                                </div>}
                             </form>
                             <div className="button mt-2 lg:mt-0">
                                 <button onClick={CheckValidity} className="group bg-pink-500 relative inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 p-2 font-medium tracking-wide text-xl shadow-2xl border border-[#b2b4b6] hover:scale-105 transition duration-300 ease-out text-white hover:shadow-orange-600 active:translate-y-1">
