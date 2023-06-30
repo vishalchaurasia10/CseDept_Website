@@ -20,7 +20,7 @@ const AnnouncementState = (props) => {
 
             const result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_ANNOUNCEMENTS_COLLECTION_ID,);
 
-            setAnnouncement(result.documents);
+            setAnnouncement(result.documents.reverse());
             setLoading(false);
         } catch (error) {
             console.log(error);

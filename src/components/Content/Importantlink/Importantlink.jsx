@@ -72,23 +72,21 @@ const Importantlink = () => {
                             const { $id, topic, url } = item;
                             const truncatedTopic = topic.length > 20 ? `${topic.substring(0, 20)}...` : topic;
                             return (
-                                <>
-                                    <div key={$id} className="semester bg-[#D7D9DD] font-jost shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-1 lg:mx-5 lg:space-x-6 flex flex-col md:flex-row w-full lg:w-full">
-                                        {/* <Image title={capitalizeWords(name)} className='cursor-pointer w-full md:w-[40%] lg:w-[30%] rounded-2xl mb-2 lg:mb-3' src={`${url}`} width={300} height={300} alt={capitalizeWords(name)} /> */}
-                                        <div className="details md:w-[60%] lg:w-[70%] w-full md:pl-5 lg:pl-0 py-3 flex lg:flex-row lg:items-center lg:space-x-5 flex-col">
-                                            {topic.length > 0 && <div title={capitalizeWords(topic)} className="topic flex">
-                                                <p className='text-[1.9rem] lg:text-3xl font-extrabold'>{capitalizeWords(truncatedTopic)} : </p>
-                                            </div>}
-                                            {url.length > 0 &&
-                                                <Link target='_blank' href={`${url}`}>
-                                                    <div title={url} className="codeDetails space-x-1 flex mt-1">
-                                                        <FaLink className='text-xl mt-1' />
-                                                        <p className='text-lg hover:underline font-light'>{url}</p>
-                                                    </div>
-                                                </Link>}
-                                        </div>
+                                <div key={$id} className="semester bg-[#D7D9DD] font-jost shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-1 lg:mx-5 lg:space-x-6 flex flex-col md:flex-row w-full lg:w-full">
+                                    {/* <Image title={capitalizeWords(name)} className='cursor-pointer w-full md:w-[40%] lg:w-[30%] rounded-2xl mb-2 lg:mb-3' src={`${url}`} width={300} height={300} alt={capitalizeWords(name)} /> */}
+                                    <div className="details md:w-[60%] lg:w-[70%] w-full md:pl-5 lg:pl-0 py-3 flex lg:flex-row lg:items-center lg:space-x-5 flex-col">
+                                        {topic.length > 0 && <div title={capitalizeWords(topic)} className="topic flex">
+                                            <p className='text-[1.9rem] lg:text-3xl font-extrabold'>{capitalizeWords(truncatedTopic)} : </p>
+                                        </div>}
+                                        {url.length > 0 &&
+                                            <Link target='_blank' href={`${url}`}>
+                                                <div title={url} className="codeDetails space-x-1 flex mt-1">
+                                                    <FaLink className='text-xl mt-1' />
+                                                    <p className='text-lg hover:underline font-light'>{url}</p>
+                                                </div>
+                                            </Link>}
                                     </div>
-                                </>
+                                </div>
                             )
                         }
                         )}

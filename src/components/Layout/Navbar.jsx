@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { navbarDetails } from '@/utils/constants';
@@ -15,6 +15,7 @@ const Navbar = () => {
     const [showDetails, setShowDetails] = useState(false)
     const RoleContext = useContext(roleContext)
     const { role, setRole } = RoleContext
+    const detailsRef = useRef(null);
 
     const expandNav = () => {
         setNavExpand(!navExpand)
@@ -83,6 +84,10 @@ const Navbar = () => {
         }
     }
 
+    const handleBlur = () => {
+        setShowDetails(false);
+    };
+
     useEffect(() => {
         checkVerification()
     }, [])
@@ -121,7 +126,9 @@ const Navbar = () => {
                         :
                         <div className={`relative flex items-center space-x-3`}>
                             <Button destination='/adminPanel' content='Upload' />
-                            <FaUserCircle onClick={expandDetails} className='text-2xl hover:scale-110 transition-all duration-300 cursor-pointer' />
+                            <button onBlur={handleBlur} className=''>
+                                <FaUserCircle onClick={expandDetails} className='text-2xl hover:scale-110 transition-all duration-300 cursor-pointer' />
+                            </button>
                             <div className={`credentials ${showDetails ? 'opacity-100' : 'opacity-0 scale-0'} transition-all duration-300 py-4 pb-6 bg-pureWhite text-[#565656] font-jost rounded-2xl shadow-2xl shadow-black absolute right-0 top-14 text-sm tracking-wide space-y-1`}>
                                 <div className="name py-2 px-10">
                                     <p className='font-bold text-black -mb-1' title={role.name} >{role.name}</p>
