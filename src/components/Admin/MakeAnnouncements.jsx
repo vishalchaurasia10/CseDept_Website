@@ -11,7 +11,7 @@ const failureLong = (message) => toast.error(message, { duration: 3000, style: {
 const MakeAnnouncements = () => {
 
     const [loading, setLoading] = useState(false);
-    const [announcementDetails, setAnnouncementDetails] = useState({ title: '', description: '', url: 'https://cloud.appwrite.io/v1/storage/buckets/648db2adc766d7035259/files/648db31fcb900eebb380/view?project=6478c5e7959a86375ccd&mode=admin', date: '', venue: '', time: '' })
+    const [announcementDetails, setAnnouncementDetails] = useState({ title: '', description: '', url: null, date: '', venue: '', time: '' })
 
     const handleFileUpload = async (e) => {
         try {
@@ -99,7 +99,7 @@ const MakeAnnouncements = () => {
         setAnnouncementDetails({
             title: '',
             description: '',
-            url: 'https://cloud.appwrite.io/v1/storage/buckets/648db2adc766d7035259/files/648db31fcb900eebb380/view?project=6478c5e7959a86375ccd&mode=admin',
+            url: null,
             date: '',
             venue: '',
             time: ''
@@ -115,9 +115,6 @@ const MakeAnnouncements = () => {
         }
         else if (announcementDetails.description.length < 10) {
             failureLong('Description should be atleast 10 characters long');
-        }
-        else if (announcementDetails.url === null) {
-            failure('Please upload a file');
         }
         else {
             handleInputSubmit();
@@ -233,12 +230,13 @@ const MakeAnnouncements = () => {
                                             <span className="relative">Change</span>
                                         </label>
                                     </button>
-                                    <Link target='_blank' href={announcementDetails.url}>
-                                        <button className="group relative inline-flex items-center justify-center overflow-hidden rounded-md px-4 lg:px-8 py-3 font-medium tracking-wide text-white text-xl shadow-2xl border border-[rgba(255,255,255,0.5)]  hover:border-slate-100/20 hover:scale-110 transition duration-300 ease-out  hover:shadow-orange-600 active:translate-y-1">
-                                            <span className="absolute inset-0 bg-gradient-to-r from-orange-400 via-pink-500  to-purple-500 opacity-0  transition duration-300 ease-out  group-hover:opacity-100  group-active:opacity-90"></span>
-                                            <span className="relative">Preview</span>
-                                        </button>
-                                    </Link>
+                                    {!announcementDetails.url ? '' :
+                                        <Link target='_blank' href={announcementDetails.url}>
+                                            <button className="group relative inline-flex items-center justify-center overflow-hidden rounded-md px-4 lg:px-8 py-3 font-medium tracking-wide text-white text-xl shadow-2xl border border-[rgba(255,255,255,0.5)]  hover:border-slate-100/20 hover:scale-110 transition duration-300 ease-out  hover:shadow-orange-600 active:translate-y-1">
+                                                <span className="absolute inset-0 bg-gradient-to-r from-orange-400 via-pink-500  to-purple-500 opacity-0  transition duration-300 ease-out  group-hover:opacity-100  group-active:opacity-90"></span>
+                                                <span className="relative">Preview</span>
+                                            </button>
+                                        </Link>}
                                 </div>
                             </div>
                         </div>
