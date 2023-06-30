@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import announcementContext from '@/context/announcement/announcementContext';
 import loadingContext from '@/context/loading/loadingContext';
 import roleContext from '@/context/role/roleContext';
@@ -11,7 +11,7 @@ import { Toaster, toast } from 'react-hot-toast';
 
 const TimeTable = () => {
 
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = useState(false);
   const AnnouncementContext = useContext(announcementContext);
   const { announcements, fetchAnnouncements, deleteAnnouncement } = AnnouncementContext;
   const LoadingContext = useContext(loadingContext);
@@ -192,7 +192,7 @@ const TimeTable = () => {
                         </div>
                       )}
                       {description.length > 0 && (
-                        <div title={`Description: ${description}`} className="semesterDetails whitespace-nowrap flex w-full">
+                        <div title={`Description : ${description}`} className="semesterDetails whitespace-nowrap flex w-full">
                           <p className="font-bold">Description&nbsp;</p>
                           <p className="overflow-hidden whitespace-nowrap overflow-ellipsis">
                             <span className="font-bold">: </span>
@@ -201,7 +201,7 @@ const TimeTable = () => {
                         </div>
                       )}
                       {(
-                        <div title="Download Timetable" className="codeDetails flex">
+                        <div title="Download Announcement" className="codeDetails flex">
                           <Link target="_blank" href={`${fileUrl}`}>
                             <p className="font-bold hover:underline">View</p>
                           </Link>

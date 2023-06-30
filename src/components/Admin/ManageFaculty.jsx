@@ -127,7 +127,7 @@ const ManageFaculty = () => {
         else if (facultyDetails.bio.length < 10) {
             failureLong('Bio should be atleast 10 characters long');
         }
-        else if (facultyDetails.url === 'null') {
+        else if (facultyDetails.url === null) {
             failure('Please upload the image');
         }
         else {

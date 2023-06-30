@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import TimetableContext from "./timetableContext";
-import { Client, Databases } from "appwrite";
+import { Client, Databases, Storage } from "appwrite";
 import loadingContext from "../loading/loadingContext";
 
 const TimetableState = (props) => {
