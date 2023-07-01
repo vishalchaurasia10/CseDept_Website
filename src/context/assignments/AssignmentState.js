@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import AssignmentContext from "./assignmentContext";
-import { Client, Databases, Query } from "appwrite";
+import { Client, Databases, Query, Storage } from "appwrite";
 import loadingContext from "../loading/loadingContext";
 
 const AssignmentState = (props) => {
@@ -46,7 +46,7 @@ const AssignmentState = (props) => {
             } else if (subjectCode !== -1) {
 
                 query2 = Query.equal('subjectCode', `${subjectCode}`)
-                result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_ASSIGNMENTS_COLLECTION_ID, [ query2]);
+                result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_ASSIGNMENTS_COLLECTION_ID, [query2]);
 
             }
 
@@ -59,8 +59,43 @@ const AssignmentState = (props) => {
         }
     }
 
+    const deleteFile = async (fielId) => {
+        try {
+            const client = new Client();
+            const storage = new Storage(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            await storage.deleteFile(process.env.NEXT_PUBLIC_ASSIGNMENTS_BUCKET_ID, fielId);
+
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const deleteAssignment = async (id, fileId) => {
+        try {
+            const client = new Client();
+            const databases = new Databases(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            const result = await databases.deleteDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_ASSIGNMENTS_COLLECTION_ID, id);
+
+            await deleteFile(fileId);
+            fetchAssignment();
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     return (
-        <AssignmentContext.Provider value={{ assignment, setAssignment, fetchAssignment, fetchSemestersAssignments }}>
+        <AssignmentContext.Provider value={{ assignment, setAssignment, fetchAssignment, fetchSemestersAssignments, deleteAssignment }}>
             {props.children}
         </AssignmentContext.Provider>
     )
