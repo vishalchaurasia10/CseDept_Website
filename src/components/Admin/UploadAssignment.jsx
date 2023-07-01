@@ -175,7 +175,7 @@ const UploadAssignments = () => {
     return (
         <>
             <Toaster />
-            <div className="wrapper px-2 lg:px-40 mb-5 lg:mb-10 flex items-center justify-center">
+            <div className="wrapper px-2 md:scale-90 lg:px-40 mb-5 lg:mb-10 flex items-center justify-center">
                 <div className="container shadow-2xl shadow-black bg-[#D7D9DD] text-[#262626] font-jost mt-16 w-full rounded-2xl border-2 border-white">
                     <div className="content flex flex-col lg:flex-row">
                         <div className="heading lg:hidden block mt-6 px-7 font-bold">

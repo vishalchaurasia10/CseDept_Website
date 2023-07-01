@@ -75,7 +75,7 @@ const UploadImportantLinks = () => {
     return (
         <>
             <Toaster />
-            <div className="wrapper px-2 lg:px-40 mt-10 md:-mt-60 lg:-mt-28 -mb-4 flex items-center justify-center">
+            <div className="wrapper md:scale-90 px-2 lg:px-40 mt-10 lg:mt-14 -mb-4 flex items-center justify-center">
                 <div className="container shadow-2xl shadow-black bg-[#D7D9DD] text-[#262626] font-jost mt-20 w-full rounded-2xl border-2 border-white">
                     <div className="content flex flex-col lg:flex-row">
                         <div className="heading lg:hidden block mt-6 px-7 font-bold">

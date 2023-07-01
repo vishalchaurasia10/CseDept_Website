@@ -99,7 +99,7 @@ const Semester = () => {
                 (
                     <>
                         {ugsemester.length === 0 ?
-                            <div className="404 px-4 lg:px-28 flex space-y-5 flex-col items-center lg:items-start justify-center my-14">
+                            <div className="404 px-4 lg:px-28 pt-6 lg:pt-0 flex space-y-5 flex-col items-center lg:items-start justify-center my-14">
                                 <h1 className="text-5xl lg:text-7xl pb-8 mx-4 lg:mt-10 font-jost font-extrabold">UG Courses</h1>
                                 <h1 className="text-3xl pb-8 px-4 text-center lg:px-6 font-jost font-extrabold">No data has been uploaded</h1>
                             </div>
