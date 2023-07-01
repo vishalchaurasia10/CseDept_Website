@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import NoteContext from "./noteContext";
-import { Client, Databases, Query } from "appwrite";
+import { Client, Databases, Query, Storage } from "appwrite";
 import loadingContext from "../loading/loadingContext";
 
 const NoteState = (props) => {
@@ -65,8 +65,41 @@ const NoteState = (props) => {
         }
     }
 
+    const deleteFile = async (fileId) => {
+        try {
+            const client = new Client();
+            const storage = new Storage(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            await storage.deleteFile(process.env.NEXT_PUBLIC_NOTES_BUCKET_ID, fileId);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const deleteNote = async (id, fileId) => {
+        try {
+            const client = new Client();
+            const databases = new Databases(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            const result = await databases.deleteDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID, id);
+
+            await deleteFile(fileId);
+            fetchNotes();
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
-        <NoteContext.Provider value={{ notes, setNotes, fetchNotes, fetchSemestersNotes }}>
+        <NoteContext.Provider value={{ notes, setNotes, fetchNotes, fetchSemestersNotes, deleteNote }}>
             {props.children}
         </NoteContext.Provider>
     )
