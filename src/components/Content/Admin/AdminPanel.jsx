@@ -29,7 +29,7 @@ const AdminPanel = () => {
             {(role.role !== 'student') ?
                 <div>
                     {role.role === 'admin' ?
-                        <div>
+                        <div className='md:scale-90'>
                             <UploadImportantLinks />
                             <UploadNotes />
                             <UploadAssignments />

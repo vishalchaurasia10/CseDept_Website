@@ -123,12 +123,15 @@ const UploadTimeTable = () => {
     const renderFileUpload = () => {
         if (!timeTableDetails.url) {
             return (
-                <label className='preview flex flex-col items-center justify-center p-2 mb-8' htmlFor="timeTableFile">
-                    <Image className=" h-full w-full cursor-pointer" src="/images/timetable.svg" width={200} height={200} alt='Upload Image' />
-                    {loading && <Image className='relative mx-auto mb-4 lg:mb-0 h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
-                    {/* <FaCloudUploadAlt className="text-[#F02D65] -mt-20 text-[15rem] cursor-pointer" /> */}
-                    <input onChange={handleFileUpload} className="hidden" type="file" name="timeTableFile" id="timeTableFile" />
-                </label>
+                <>
+                    <label className='preview flex flex-col items-center justify-center p-2 mb-5' htmlFor="timeTableFile">
+                        <Image className=" h-full w-full cursor-pointer" src="/images/timetable.svg" width={200} height={200} alt='Upload Image' />
+                        {loading && <Image className='relative mx-auto mb-4 lg:mb-0 h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
+                        {/* <FaCloudUploadAlt className="text-[#F02D65] -mt-20 text-[15rem] cursor-pointer" /> */}
+                        <input onChange={handleFileUpload} className="hidden" type="file" name="timeTableFile" id="timeTableFile" />
+                    </label>
+                    <button className='text-white text-sm mb-2'>Click on above image to upload file</button>
+                </>
             );
         }
 
@@ -149,7 +152,7 @@ const UploadTimeTable = () => {
     return (
         <>
             <Toaster />
-            <div className="wrapper px-2 lg:px-40 mb-5 lg:mb-10 flex items-center justify-center">
+            <div className="wrapper px-2 lg:px-40 mb-5 md:mb-0 lg:mb-0 flex items-center justify-center">
                 <div className="container shadow-2xl shadow-black bg-[#D7D9DD] text-[#262626] font-jost mt-20 w-full rounded-2xl border-2 border-white">
                     <div className="content flex flex-col lg:flex-row">
                         <div className="heading lg:hidden block mt-6 px-7 font-bold">
@@ -189,7 +192,7 @@ const UploadTimeTable = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="fileUpload bg-[#262626] rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
+                        <div className="fileUpload bg-[#262626] text-center rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
                             {renderFileUpload()}
                         </div>
                     </div>

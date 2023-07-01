@@ -156,12 +156,15 @@ const UploadNotes = () => {
     const renderFileUpload = () => {
         if (!notesDetails.url) {
             return (
-                <label className='preview flex flex-col items-center justify-center p-2 mb-8' htmlFor="notesFile">
-                    <Image className=" h-full w-full cursor-pointer" src="/images/upload.svg" width={200} height={200} alt='Upload Image' />
-                    {loading && <Image className='relative mx-auto mb-4 lg:mb-0 h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
-                    {/* <FaCloudUploadAlt className="text-[#F02D65] -mt-20 text-[15rem] cursor-pointer" /> */}
-                    <input onChange={handleFileUpload} className="hidden" type="file" name="notesFile" id="notesFile" />
-                </label>
+                <>
+                    <label className='preview flex flex-col items-center justify-center p-2 mb-2 lg:mb-8' htmlFor="notesFile">
+                        <Image className=" h-full w-full cursor-pointer" src="/images/upload.svg" width={200} height={200} alt='Upload Image' />
+                        {loading && <Image className='relative mx-auto mb-4 lg:mb-0 h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
+                        {/* <FaCloudUploadAlt className="text-[#F02D65] -mt-20 text-[15rem] cursor-pointer" /> */}
+                        <input onChange={handleFileUpload} className="hidden" type="file" name="notesFile" id="notesFile" />
+                    </label>
+                    <button className='text-white text-sm mb-4'>Click on above image to upload file</button>
+                </>
             );
         }
 
@@ -354,7 +357,7 @@ const UploadNotes = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="fileUpload bg-[#262626] rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
+                        <div className="fileUpload bg-[#262626] text-center rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
                             {renderFileUpload()}
                         </div>
                     </div>
