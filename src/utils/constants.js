@@ -9,11 +9,11 @@ export const navbarDetails = [
         url: "/courses",
         key: 2,
     },
-    {
-        title: "Faculty",
-        url: "/faculty",
-        key: 3,
-    },
+    // {
+    //     title: "Faculty",
+    //     url: "/faculty",
+    //     key: 3,
+    // },
     {
         title: "TimeTable",
         url: "/timetable",

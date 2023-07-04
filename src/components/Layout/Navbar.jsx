@@ -161,7 +161,7 @@ const Navbar = () => {
                 <ul className={`flex text-2xl space-y-4 flex-col justify-center font-jost text-center items-center`}>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/'>Home</Link></li>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/courses'>Courses</Link></li>
-                    <li onClick={expandNav} className='cursor-pointer'><Link href='/faculty'>Faculty</Link></li>
+                    {/* <li onClick={expandNav} className='cursor-pointer'><Link href='/faculty'>Faculty</Link></li> */}
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/timetable'>Time Table</Link></li>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/announcements'>Announcements</Link></li>
                     <li onClick={expandNav} className='cursor-pointer'><Link href='/importantlinks'>Important Links</Link></li>
