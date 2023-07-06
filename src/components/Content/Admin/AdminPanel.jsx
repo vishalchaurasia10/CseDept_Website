@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import UploadNotes from '../../Admin/UploadNotes';
 import MakeAnnouncements from '../../Admin/MakeAnnouncements';
-import ManageFaculty from '@/components/Admin/ManageFaculty';
+// import ManageFaculty from '@/components/Admin/ManageFaculty';
 import UploadTimeTable from '@/components/Admin/UploadTimeTable';
 import UploadImportantLinks from '@/components/Admin/UploadImportantLinks';
 import UploadAssignments from '@/components/Admin/UploadAssignment';
@@ -34,7 +34,7 @@ const AdminPanel = () => {
                             <UploadNotes />
                             <UploadAssignments />
                             <MakeAnnouncements />
-                            <ManageFaculty />
+                            {/* <ManageFaculty /> */}
                             <UploadTimeTable />
                         </div>
                         :

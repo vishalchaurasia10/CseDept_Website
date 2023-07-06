@@ -15,7 +15,7 @@ const Navbar = () => {
     const [showDetails, setShowDetails] = useState(false)
     const RoleContext = useContext(roleContext)
     const { role, setRole } = RoleContext
-    const detailsRef = useRef(null);
+    const ref = useRef(null);
 
     const expandNav = () => {
         setNavExpand(!navExpand)
@@ -92,6 +92,20 @@ const Navbar = () => {
         checkVerification()
     }, [])
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (ref.current && !ref.current.contains(event.target)) {
+                setShowDetails(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
     return (
         <>
             <nav
@@ -124,9 +138,9 @@ const Navbar = () => {
                     {role.role === 'student' ?
                         <Button destination='/sign-in' content='LogIn' />
                         :
-                        <div className={`relative flex items-center space-x-3`}>
+                        <div ref={ref} className={`relative flex items-center space-x-3`}>
                             <Button destination='/adminPanel' content='Upload' />
-                            <button onBlur={handleBlur} className=''>
+                            <button className='userIcon'>
                                 <FaUserCircle onClick={expandDetails} className='text-2xl hover:scale-110 transition-all duration-300 cursor-pointer' />
                             </button>
                             <div className={`credentials ${showDetails ? 'opacity-100' : 'opacity-0 scale-0'} transition-all duration-300 py-4 pb-6 bg-pureWhite text-[#565656] font-jost rounded-2xl shadow-2xl shadow-black absolute right-0 top-14 text-sm tracking-wide space-y-1`}>
