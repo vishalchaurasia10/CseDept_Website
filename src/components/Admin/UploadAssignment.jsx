@@ -25,6 +25,11 @@ const UploadAssignments = () => {
             const fileInput = document.getElementById('assignmentFile');
             const file = fileInput.files[0];
 
+            setAssignmentDetails((prevDetails) => ({
+                ...prevDetails,
+                extension: '.'+file.name.split('.').pop()
+            }));
+
             const client = new Client()
                 .setEndpoint('https://cloud.appwrite.io/v1')
                 .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
@@ -131,9 +136,6 @@ const UploadAssignments = () => {
         }
         else if (assignmentDetails.subjectCode.length < 3) {
             failureLong('Sub Code should be atleast 3 characters long');
-        }
-        else if (assignmentDetails.extension === '') {
-            failure('Please choose the .extension of the file');
         }
         else if (assignmentDetails.url === null) {
             failure('Please upload a file');
@@ -246,7 +248,7 @@ const UploadAssignments = () => {
                                             Semester 8
                                         </option>
                                     </select>
-                                    <select
+                                    {/* <select
                                         onChange={handleInputChange}
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="extension"
@@ -271,7 +273,7 @@ const UploadAssignments = () => {
                                         <option className="bg-white" value=".xlsx">
                                             .xlsx (Microsoft Excel Spreadsheet)
                                         </option>
-                                    </select>
+                                    </select> */}
                                 </div>
 
                                 <input

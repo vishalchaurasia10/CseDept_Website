@@ -84,10 +84,6 @@ const Navbar = () => {
         }
     }
 
-    const handleBlur = () => {
-        setShowDetails(false);
-    };
-
     useEffect(() => {
         checkVerification()
     }, [])
