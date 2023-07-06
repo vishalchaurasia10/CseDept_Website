@@ -229,7 +229,8 @@ const Units = () => {
                     <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                         {assignmentUnits.map((item) => {
                             const { name, $id, url, extension, $updatedAt, subjectCode } = item;
-                            const ext = extension.substring(1);
+                            const getExt = extension.substring(1);
+                            const ext = ['pdf', 'docx', 'pptx', 'txt', 'xlsx'].includes(getExt) ? getExt : 'txt';
                             const dateTime = convertStringToDateTime($updatedAt);
                             const truncatedName = name.length > 20 ? `${name.substring(0, 20)}...` : name;
                             return (

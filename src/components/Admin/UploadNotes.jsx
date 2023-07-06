@@ -9,16 +9,16 @@ const failureLong = (message) => toast.error(message, { duration: 3000, style: {
 
 const UploadNotes = () => {
     const [loading, setLoading] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState('');
+    const [selectedSemester, setSelectedSemester] = useState('');
     const [lab, setLab] = useState(false);
     const [notesDetails, setNotesDetails] = useState({
         name: '',
         subject: '',
         subjectCode: '',
         unit: '',
-        semester: '',
         url: null,
         extension: '',
-        course: ''
     });
 
     const handleFileUpload = async (e) => {
@@ -29,7 +29,7 @@ const UploadNotes = () => {
 
             setNotesDetails((prevDetails) => ({
                 ...prevDetails,
-                extension: '.'+file.name.split('.').pop()
+                extension: '.' + file.name.split('.').pop()
             }));
 
             const client = new Client()
@@ -78,7 +78,13 @@ const UploadNotes = () => {
             [name]: value
         }));
 
-        if ((notesDetails.unit).includes('lab')) {
+        if (name === 'course')
+        setSelectedCourse(value);
+
+        if (name === 'semester')
+        setSelectedSemester(value);
+
+        if ((notesDetails.unit).includes('lab')|| (notesDetails.unit).includes('Lab')) {
             setLab(true);
         } else {
             setLab(false);
@@ -102,10 +108,10 @@ const UploadNotes = () => {
                     subject: notesDetails.subject,
                     subjectCode: notesDetails.subjectCode,
                     unit: notesDetails.unit,
-                    semester: notesDetails.semester,
+                    semester: selectedSemester,
                     url: notesDetails.url,
                     extension: notesDetails.extension,
-                    course: notesDetails.course
+                    course: selectedCourse
                 },
             );
 
@@ -123,19 +129,25 @@ const UploadNotes = () => {
             failure('Something went wrong');
         }
 
+        console.log(notesDetails);
+
+        setSelectedCourse('');
+        setSelectedSemester('');
         setNotesDetails({
             name: '',
             subject: '',
             subjectCode: '',
             unit: '',
             url: null,
+            extension: ''
         });
     };
 
+
     const CheckValidity = () => {
-        if (notesDetails.name === '' || notesDetails.subject === '' || notesDetails.subjectCode === '' || notesDetails.unit === '' || notesDetails.course === '') {
+        if (notesDetails.name === '' || notesDetails.subject === '' || notesDetails.subjectCode === '' || notesDetails.unit === '' || selectedCourse === '') {
             failure('Please fill all the fields');
-        } else if (notesDetails.semester === '') {
+        } else if (selectedSemester === '') {
             failure('Please select the semester');
         }
         else if (notesDetails.name.length < 5) {
@@ -204,6 +216,7 @@ const UploadNotes = () => {
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="course"
                                         id="course"
+                                        value={selectedCourse}
                                         defaultValue=''
                                     >
                                         <option disabled value=''>
@@ -230,6 +243,7 @@ const UploadNotes = () => {
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="semester"
                                         id="semester"
+                                        value={selectedSemester}
                                         defaultValue=''
                                     >
                                         <option disabled value=''>

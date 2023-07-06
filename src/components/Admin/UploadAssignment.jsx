@@ -9,14 +9,14 @@ const failureLong = (message) => toast.error(message, { duration: 3000, style: {
 
 const UploadAssignments = () => {
     const [loading, setLoading] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState('');
+    const [selectedSemester, setSelectedSemester] = useState('');
     const [assignmentDetails, setAssignmentDetails] = useState({
         name: '',
         subject: '',
         subjectCode: '',
-        semester: '',
         url: null,
         extension: '',
-        course: '',
     });
 
     const handleFileUpload = async (e) => {
@@ -75,6 +75,12 @@ const UploadAssignments = () => {
             ...prevDetails,
             [name]: value
         }));
+
+        if (name === 'course')
+        setSelectedCourse(value);
+
+        if (name === 'semester')
+        setSelectedSemester(value);
     };
 
     const handleInputSubmit = async () => {
@@ -93,10 +99,10 @@ const UploadAssignments = () => {
                     name: assignmentDetails.name,
                     subject: assignmentDetails.subject,
                     subjectCode: assignmentDetails.subjectCode,
-                    semester: assignmentDetails.semester,
+                    semester: selectedSemester,
                     url: assignmentDetails.url,
                     extension: assignmentDetails.extension,
-                    course: assignmentDetails.course,
+                    course: selectedCourse,
                 },
             );
 
@@ -114,18 +120,21 @@ const UploadAssignments = () => {
             failure('Something went wrong');
         }
 
+        setSelectedCourse('');
+        setSelectedSemester('');
         setAssignmentDetails({
             name: '',
             subject: '',
             subjectCode: '',
             url: null,
+            extension: '',
         });
     };
 
     const CheckValidity = () => {
-        if (assignmentDetails.name === '' || assignmentDetails.subject === '' || assignmentDetails.subjectCode === '' || assignmentDetails.course === '') {
+        if (assignmentDetails.name === '' || assignmentDetails.subject === '' || assignmentDetails.subjectCode === '' || selectedCourse === '') {
             failure('Please fill all the fields');
-        } else if (assignmentDetails.semester === '') {
+        } else if (selectedSemester === '') {
             failure('Please select the semester')
         }
         else if (assignmentDetails.name.length < 5) {
@@ -194,6 +203,7 @@ const UploadAssignments = () => {
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="course"
                                         id="course"
+                                        value={selectedCourse}
                                         defaultValue=''
                                     >
                                         <option disabled value=''>
@@ -220,6 +230,7 @@ const UploadAssignments = () => {
                                         className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
                                         name="semester"
                                         id="semester"
+                                        value={selectedSemester}
                                         defaultValue=''
                                     >
                                         <option disabled value=''>Select Semester</option>
