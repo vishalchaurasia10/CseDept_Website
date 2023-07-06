@@ -10,7 +10,7 @@ const SignIn = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' })
   const router = useRouter()
   const RoleContext = useContext(roleContext)
-  const { role,setRole } = RoleContext
+  const { role, setRole } = RoleContext
 
   const onChangeHandler = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -47,24 +47,24 @@ const SignIn = () => {
 
   const decideRole = async (id) => {
     try {
-        const client = new Client()
-            .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
-            .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-        const databases = new Databases(client);
+      const client = new Client()
+        .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+        .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+      const databases = new Databases(client);
 
-        const response = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USERS_COLLECTION_ID, [Query.search('id', id)]
-        );
+      const response = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USERS_COLLECTION_ID, [Query.search('id', id)]
+      );
 
 
-        if (response.documents[0].role === 'admin') {
-            setRole((prevRole) => ({ ...prevRole, role: 'admin' }));
-        } else if (response.documents[0].role === 'faculty') {
-            setRole((prevRole) => ({ ...prevRole, role: 'faculty' }));
-        }
+      if (response.documents[0].role === 'admin') {
+        setRole((prevRole) => ({ ...prevRole, role: 'admin' }));
+      } else if (response.documents[0].role === 'faculty') {
+        setRole((prevRole) => ({ ...prevRole, role: 'faculty' }));
+      }
     } catch (error) {
-        console.log(error)
+      console.log(error)
     }
-}
+  }
 
   const checkValidity = (e) => {
     e.preventDefault()
@@ -81,7 +81,7 @@ const SignIn = () => {
   }
 
   useEffect(() => {
-    if(role.role === 'admin' || role.role === 'faculty'){
+    if (role.role === 'admin' || role.role === 'faculty') {
       router.push('/adminPanel')
     }
   }, [])
@@ -94,7 +94,7 @@ const SignIn = () => {
         <div className="content w-full md:w-[27%] border bg-pureWhite border-gray-300 p-6 rounded-2xl shadow-2xl shadow-black">
           <div className="heading py-4">
             <h1 className='bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 text-2xl font-jost'>Sign in</h1>
-            <h3>to continue as admin</h3>
+            <h3>to continue as admin/faculty</h3>
           </div>
           <form className='form flex w-full flex-col'>
             <div className="email flex items-center mb-2 px-2 py-1 border-2 border-gray-300 rounded-xl">
@@ -104,6 +104,9 @@ const SignIn = () => {
             <div className="password flex items-center mb-2 px-2 py-1 border-2 border-gray-300 rounded-xl">
               <FaLock className='text-gray-500 pl-1' />
               <input onChange={onChangeHandler} className='text-base w-full pl-4 p-2 outline-none text-gray-500 bg-pureWhite ' placeholder='Enter the password' value={credentials.password} type="password" name="password" id="password" />
+            </div>
+            <div className="forgotPassword flex items-center space-x-1 justify-center text-sm">
+              <Link href='/forgotPassword' className='text-[#FE538D]'>Forgot Password?</Link>
             </div>
             <button onClick={checkValidity} className='py-2 my-5 w-1/2 mx-auto hover:-translate-y-[0.1rem] text-white  bg-[#FE538D] duration-150 font-jost font-semibold border rounded-md px-3 hover:shadow-2xl shadow-black border-[rgba(255,255,255,0.1)]'>Sign In</button>
           </form>

@@ -150,7 +150,7 @@ const Navbar = () => {
                                 <div className="role py-2 px-10 hover:bg-[#f5f5f5]">
                                     <p>Role : {role.role}</p>
                                 </div>
-                                <div onClick={signOut} className="signout cursor-pointer py-2 px-10 hover:bg-[#f5f5f5]">
+                                <div onClick={signOut} title='Sign-out' className="signout cursor-pointer py-2 px-10 hover:bg-[#f5f5f5]">
                                     <FaSignOutAlt className='text-lg inline mr-2' />
                                     <p className='inline'>Sign Out</p>
                                 </div>
