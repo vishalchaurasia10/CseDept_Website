@@ -140,14 +140,14 @@ const Units = () => {
     const handleShowModal = () => {
         setShowModal(true);
         const modal = document.getElementById('modal');
-        document.body.classList.add('overflow-hidden');
+        document.body.classList.add('overflow-x-hidden');
         modal.showModal();
     }
 
     const handleHideModal = () => {
         setShowModal(false);
         const modal = document.getElementById('modal');
-        document.body.classList.remove('overflow-hidden');
+        document.body.classList.remove('overflow-x-hidden');
         modal.close();
     }
 
@@ -155,7 +155,7 @@ const Units = () => {
         const handleKeyDown = (event) => {
             if (event.key === 'Escape') {
                 setShowModal(false);
-                document.body.classList.remove('overflow-hidden');
+                document.body.classList.remove('overflow-x-hidden');
             }
         };
 
@@ -281,7 +281,7 @@ const Units = () => {
                                         <FaTrash title='Delete' onClick={handleShowModal} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-0 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
                                     </div> : ''}
                                     <div className={`modalWrapper ${showModal ? '' : 'hidden'} bg-[rgba(0,0,0,0.8)] font-jost z-50 absolute top-0 -left-2 w-screen h-screen flex items-center justify-center`}>
-                                        <dialog id='modal' className="modal bg-[#3e3e3f] absolute z-50 p-6 px-8 mx-4 md:mx-auto lg:px-10 rounded-2xl shadow-2xl shadow-black text-white">
+                                        <dialog id='modal' className="modal bg-[#3e3e3f] absolute p-6 px-8 mx-4 md:mx-auto lg:px-10 rounded-2xl shadow-2xl shadow-black text-white">
                                             <form className="">
                                                 <header className="modal-header py-3 flex items-center justify-between">
                                                     <div className="excalmation flex space-x-2 items-center">
