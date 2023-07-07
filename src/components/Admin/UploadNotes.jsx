@@ -22,10 +22,37 @@ const UploadNotes = () => {
     });
 
     const handleFileUpload = async (e) => {
+
+        const fileInput = document.getElementById('notesFile');
+        const file = fileInput.files[0];
+
+        if (notesDetails.name === '' || notesDetails.subject === '' || notesDetails.subjectCode === '' || notesDetails.unit === '' || selectedCourse === '') {
+            failure('Please fill the fields first');
+            fileInput.value = null;
+            return
+        } else if (selectedSemester === '') {
+            failure('Please select the semester');
+            fileInput.value = null;
+            return
+        }
+        else if (notesDetails.name.length < 5) {
+            failureLong('Name should be atleast 5 characters long');
+            fileInput.value = null;
+            return
+        }
+        else if (notesDetails.subject.length < 5) {
+            failureLong('Subject should be atleast 5 characters long');
+            fileInput.value = null;
+            return
+        }
+        else if (notesDetails.subjectCode.length < 3) {
+            failureLong('Sub Code should be atleast 3 characters long');
+            fileInput.value = null;
+            return
+        }
+
         try {
             setLoading(true);
-            const fileInput = document.getElementById('notesFile');
-            const file = fileInput.files[0];
 
             setNotesDetails((prevDetails) => ({
                 ...prevDetails,
@@ -48,10 +75,6 @@ const UploadNotes = () => {
                 process.env.NEXT_PUBLIC_NOTES_BUCKET_ID,
                 fileId
             );
-            setNotesDetails((prevDetails) => ({
-                ...prevDetails,
-                url: uploadedFile.href,
-            }));
 
             toast.promise(
                 Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
@@ -63,7 +86,14 @@ const UploadNotes = () => {
                 }
             );
 
+            setNotesDetails((prevDetails) => ({
+                ...prevDetails,
+                url: uploadedFile.href,
+            }));
+
+
             fileInput.value = null; // Clear the file input value after successful upload
+            handleInputSubmit(uploadedFile.href, '.' + file.name.split('.').pop());
             setLoading(false);
         } catch (error) {
             failure('Something went wrong');
@@ -79,19 +109,19 @@ const UploadNotes = () => {
         }));
 
         if (name === 'course')
-        setSelectedCourse(value);
+            setSelectedCourse(value);
 
         if (name === 'semester')
-        setSelectedSemester(value);
+            setSelectedSemester(value);
 
-        if ((notesDetails.unit).includes('lab')|| (notesDetails.unit).includes('Lab')) {
+        if ((notesDetails.unit).includes('lab') || (notesDetails.unit).includes('Lab')) {
             setLab(true);
         } else {
             setLab(false);
         }
     };
 
-    const handleInputSubmit = async () => {
+    const handleInputSubmit = async (url, extension) => {
         try {
             const client = new Client()
                 .setEndpoint('https://cloud.appwrite.io/v1')
@@ -109,8 +139,8 @@ const UploadNotes = () => {
                     subjectCode: notesDetails.subjectCode,
                     unit: notesDetails.unit,
                     semester: selectedSemester,
-                    url: notesDetails.url,
-                    extension: notesDetails.extension,
+                    url: url,
+                    extension: extension,
                     course: selectedCourse
                 },
             );
@@ -129,8 +159,6 @@ const UploadNotes = () => {
             failure('Something went wrong');
         }
 
-        console.log(notesDetails);
-
         setSelectedCourse('');
         setSelectedSemester('');
         setNotesDetails({
@@ -141,30 +169,6 @@ const UploadNotes = () => {
             url: null,
             extension: ''
         });
-    };
-
-
-    const CheckValidity = () => {
-        if (notesDetails.name === '' || notesDetails.subject === '' || notesDetails.subjectCode === '' || notesDetails.unit === '' || selectedCourse === '') {
-            failure('Please fill all the fields');
-        } else if (selectedSemester === '') {
-            failure('Please select the semester');
-        }
-        else if (notesDetails.name.length < 5) {
-            failureLong('Name should be atleast 5 characters long');
-        }
-        else if (notesDetails.subject.length < 5) {
-            failureLong('Subject should be atleast 5 characters long');
-        }
-        else if (notesDetails.subjectCode.length < 3) {
-            failureLong('Sub Code should be atleast 3 characters long');
-        }
-        else if (notesDetails.url === null) {
-            failure('Please upload a file');
-        }
-        else {
-            handleInputSubmit();
-        }
     };
 
     const renderFileUpload = () => {
@@ -274,32 +278,6 @@ const UploadNotes = () => {
                                             Semester 8
                                         </option>
                                     </select>
-                                    {/* <select
-                                        onChange={handleInputChange}
-                                        className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white select-arrow"
-                                        name="extension"
-                                        id="extension"
-                                        defaultValue=''
-                                    >
-                                        <option disabled value=''>
-                                            Select Extension
-                                        </option>
-                                        <option className='bg-white' value=".pdf">
-                                            .pdf (Portable Document Format)
-                                        </option>
-                                        <option className=" bg-white" value=".pptx">
-                                            .pptx (Microsoft PowerPoint Presentation)
-                                        </option>
-                                        <option className="bg-white" value=".docx">
-                                            .docx (Microsoft Word Document)
-                                        </option>
-                                        <option className="bg-white" value=".txt">
-                                            .txt (Plain Text File)
-                                        </option>
-                                        <option className="bg-white" value=".xlsx">
-                                            .xlsx (Microsoft Excel Spreadsheet)
-                                        </option>
-                                    </select> */}
                                 </div>
 
                                 <input
@@ -366,12 +344,6 @@ const UploadNotes = () => {
                                     ))}
                                 </div>}
                             </form>
-                            <div className="button mt-2 lg:mt-0">
-                                <button onClick={CheckValidity} className="group bg-pink-500 relative inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 p-2 font-medium tracking-wide text-xl shadow-2xl border border-[#b2b4b6] hover:scale-105 transition duration-300 ease-out text-white hover:shadow-orange-600 active:translate-y-1">
-                                    <span className="absolute inset-0 bg-pink-500 opacity-0  transition duration-300 ease-out  group-hover:opacity-100  group-active:opacity-90"></span>
-                                    <span className="relative">Upload</span>
-                                </button>
-                            </div>
                         </div>
                         <div className="fileUpload bg-[#262626] text-center rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
                             {renderFileUpload()}
