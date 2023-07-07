@@ -100,6 +100,32 @@ const Importantlink = () => {
         };
     }, []);
 
+    function convertStringToDateTime(dateTimeString) {
+        const dateTime = new Date(dateTimeString);
+
+        // Define month names
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        // Extract the date components
+        const day = dateTime.getDate();
+        const monthIndex = dateTime.getMonth();
+        const year = dateTime.getFullYear();
+
+        // Extract the time components
+        let hours = dateTime.getHours();
+        const minutes = dateTime.getMinutes();
+        const amPm = hours >= 12 ? 'pm' : 'am';
+
+        // Convert hours to 12-hour format
+        hours = hours % 12 || 12;
+
+        // Return the formatted date and time
+        const formattedDate = `${day} ${monthNames[monthIndex]} ${year}`;
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${amPm}`;
+
+        return { date: formattedDate, time: formattedTime };
+    }
+
     return (
         <>
             <Toaster />
@@ -115,7 +141,7 @@ const Importantlink = () => {
                     </div>
                     :
                     <motion.div
-                        className="semesters lg:px-52 px-4 py-20 md:py-24 font-jost"
+                        className="semesters lg:px-40 px-4 py-20 md:py-24 font-jost"
                         ref={ref}
                         initial="hidden"
                         animate={inView ? 'visible' : 'hidden'}
@@ -124,27 +150,31 @@ const Importantlink = () => {
                         <h1 className='text-5xl md:text-6xl lg:text-7xl pb-8 lg:px-6 font-jost font-extrabold'>Important Links</h1>
                         <div className="wrapper flex flex-wrap">
                             {importantlink.map((item) => {
-                                const { $id, topic, url } = item;
-                                const truncatedTopic = topic.length > 20 ? `${topic.substring(0, 20)}...` : topic;
+                                const { $id, topic, url, $updatedAt } = item;
+                                const dateTime = convertStringToDateTime($updatedAt);
+                                const truncatedTopic = topic.length > 18 ? `${topic.substring(0, 18)}...` : topic;
                                 return (
-                                    <div key={$id} className="semester bg-[#D7D9DD] font-jost shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-1 lg:mx-5 lg:space-x-6 flex flex-col md:flex-row w-full lg:w-full">
-                                        {/* <Image title={capitalizeWords(name)} className='cursor-pointer w-full md:w-[40%] lg:w-[30%] rounded-2xl mb-2 lg:mb-3' src={`${url}`} width={300} height={300} alt={capitalizeWords(name)} /> */}
-                                        <div className="details md:w-[60%] lg:w-[70%] w-full md:pl-5 lg:pl-0 py-3 flex lg:flex-row lg:items-center lg:space-x-5 flex-col">
-                                            {topic.length > 0 && <div title={capitalizeWords(topic)} className="topic flex">
-                                                <p className='text-[1.9rem] lg:text-3xl font-extrabold'>{capitalizeWords(truncatedTopic)} : </p>
-                                            </div>}
-                                            {url.length > 0 &&
-                                                <Link target='_blank' href={`${url}`}>
-                                                    <div title={url} className="codeDetails space-x-1 flex mt-1">
-                                                        <FaLink className='text-xl mt-1' />
-                                                        <p className='text-lg hover:underline font-light'>{url}</p>
-                                                    </div>
-                                                </Link>}
+                                    <div key={$id} className="bg-[#D7D9DD] w-full shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex ">
+                                        <div className="details w-full flex flex-col justify-center">
+                                            <div className="updateDetails text-xs flex my-1 ">
+                                                <p className='font-bold whitespace-nowrap'>Updated At :&nbsp;</p>
+                                                <p className='whitespace-nowrap'>
+                                                    <span className='font-extralight'>{dateTime.date} |&nbsp;</span>
+                                                    <span className='font-extralight'>{dateTime.time}</span>
+                                                </p>
+                                            </div>
+                                            {topic.length > 0 &&
+                                                <div title={capitalizeWords(topic)} className="topic flex">
+                                                    <Link target='_blank' href={`${url}`}>
+                                                        <p className='text-[1.9rem] whitespace-nowrap hover:underline lg:text-2xl font-extrabold'>{capitalizeWords(truncatedTopic)}
+                                                        </p>
+                                                    </Link>
+                                                </div>}
                                         </div>
                                         {role.role === 'admin' ? <div className="delete relative">
                                             <FaTrash title='Delete' onClick={handleShowModal} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-0 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
                                         </div> : ''}
-                                        <div className={`modalWrapper ${showModal ? '' : 'hidden'} bg-[rgba(0,0,0,0.8)] font-jost z-50 absolute top-0 left-0 lg:-left-6 w-screen h-screen flex items-center justify-center`}>
+                                        <div className={`modalWrapper ${showModal ? '' : 'hidden'} bg-[rgba(0,0,0,0.8)] font-jost z-50 absolute top-0 -left-2 lg:-left-2 w-screen h-screen flex items-center justify-center`}>
                                             <dialog id='modal' className="modal bg-[#3e3e3f] absolute z-50 p-6 px-8 mx-4 md:mx-auto lg:px-10 rounded-2xl shadow-2xl shadow-black text-white">
                                                 <form className="">
                                                     <header className="modal-header py-3 flex items-center justify-between">
