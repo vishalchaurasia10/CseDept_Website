@@ -8,6 +8,7 @@ import UploadAssignments from '@/components/Admin/UploadAssignment';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import roleContext from '@/context/role/roleContext';
+import UploadSubjects from '@/components/Admin/UploadSubjects';
 
 const AdminPanel = () => {
     const router = useRouter()
@@ -30,6 +31,7 @@ const AdminPanel = () => {
                 <div>
                     {role.role === 'admin' ?
                         <div>
+                            <UploadSubjects />
                             <UploadImportantLinks />
                             <UploadNotes />
                             <UploadAssignments />
