@@ -32,7 +32,7 @@ const UploadAssignments = () => {
             const result = await databases.listDocuments(
                 process.env.NEXT_PUBLIC_DATABASE_ID,
                 process.env.NEXT_PUBLIC_SUBJECTS_COLLECTION_ID,
-                [Query.equal('semester', selectedSemester)]
+                [Query.equal('semester', selectedSemester), Query.equal('course', selectedCourse)]
             );
 
             if (result.total === 0) {
@@ -49,10 +49,10 @@ const UploadAssignments = () => {
     }
 
     useEffect(() => {
-        if (selectedSemester !== '') {
+        if (selectedSemester !== '' && selectedCourse !== '') {
             fetchSubjects();
         }
-    }, [selectedSemester]);
+    }, [selectedSemester,selectedCourse]);
 
     const handleFileUpload = async (e) => {
 
