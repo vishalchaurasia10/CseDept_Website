@@ -137,6 +137,8 @@ const UploadSubjects = () => {
                 setSubjects([{ subjectCode: '', subjectName: '' }]);
                 setSemester('');
                 setCourse('')
+                setSubjectID('')
+                setAlreadyUploaded(false)
             }
             setLoading(false);
         } catch (error) {
@@ -145,6 +147,35 @@ const UploadSubjects = () => {
             setLoading(false);
         }
     }
+
+    const handleDelete = async () => {
+        try {
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1')
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+
+            const databases = new Databases(client);
+
+            const result = await databases.deleteDocument(
+                process.env.NEXT_PUBLIC_DATABASE_ID,
+                process.env.NEXT_PUBLIC_SUBJECTS_COLLECTION_ID,
+                subjectID,
+            );
+
+            if (result) {
+                toast.success('Subjects deleted successfully', { duration: 3000 });
+                setSubjects([{ subjectCode: '', subjectName: '' }]);
+                setSemester('');
+                setCourse('')
+                setSubjectID('')
+                setAlreadyUploaded(false)
+            }
+        } catch (error) {
+            console.log(error);
+            failure('Something went wrong');
+        }
+    }
+
 
     const CheckValidity = () => {
 
@@ -282,21 +313,38 @@ const UploadSubjects = () => {
                                             )}
                                             <span className="relative">Upload</span>
                                         </button> :
-                                        <button
-                                            onClick={CheckUpdateValidity}
-                                            className="group bg-pink-500 relative inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 p-2 font-medium tracking-wide text-xl shadow-2xl border border-[#b2b4b6] hover:scale-105 transition duration-300 ease-out text-white hover:shadow-orange-600 active:translate-y-1"
-                                        >
-                                            {loading && (
-                                                <Image
-                                                    className="relative mx-auto pr-2 lg:mb-0 h-10 w-10"
-                                                    src="https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg"
-                                                    width={500}
-                                                    height={500}
-                                                    alt="clip"
-                                                />
-                                            )}
-                                            <span className="relative">Save Changes</span>
-                                        </button>
+                                        <div className='buttons flex flex-col space-y-2 lg:space-y-4'>
+                                            <button
+                                                onClick={CheckUpdateValidity}
+                                                className="group bg-pink-500 relative inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 p-2 font-medium tracking-wide text-xl shadow-2xl border border-[#b2b4b6] hover:scale-105 transition duration-300 ease-out text-white hover:shadow-orange-600 active:translate-y-1"
+                                            >
+                                                {loading && (
+                                                    <Image
+                                                        className="relative mx-auto pr-2 lg:mb-0 h-10 w-10"
+                                                        src="https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg"
+                                                        width={500}
+                                                        height={500}
+                                                        alt="clip"
+                                                    />
+                                                )}
+                                                <span className="relative whitespace-nowrap">Save Changes</span>
+                                            </button>
+                                            <button
+                                                onClick={handleDelete}
+                                                className="group bg-pink-500 relative inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 p-2 font-medium tracking-wide text-xl shadow-2xl border border-[#b2b4b6] hover:scale-105 transition duration-300 ease-out text-white hover:shadow-orange-600 active:translate-y-1"
+                                            >
+                                                {loading && (
+                                                    <Image
+                                                        className="relative mx-auto pr-2 lg:mb-0 h-10 w-10"
+                                                        src="https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg"
+                                                        width={500}
+                                                        height={500}
+                                                        alt="clip"
+                                                    />
+                                                )}
+                                                <span className="relative">Delete</span>
+                                            </button>
+                                        </div>
                                     }
                                 </div>
                             </div>
