@@ -218,7 +218,7 @@ const UploadSubjects = () => {
                 <div className="container shadow-2xl shadow-black bg-[#D7D9DD] text-[#262626] font-jost mt-20 w-full rounded-2xl border-2 border-white">
                     <div className="content flex flex-col lg:flex-row">
                         <div className="heading lg:hidden block mt-6 px-7 font-bold">
-                            <h1 className="text-5xl lg:text-7xl font-jost">Upload Subjects</h1>
+                            <h1 className="text-[2.85rem] lg:text-7xl font-jost">Upload Subjects</h1>
                         </div>
                         <div className="formContent order-2 lg:order-1 py-5 lg:py-10 px-6 lg:px-12 w-full flex-col items-center justify-center">
                             <div className="heading hidden font-bold lg:block mb-8">

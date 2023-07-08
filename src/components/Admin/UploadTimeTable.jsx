@@ -16,10 +16,18 @@ const UploadTimeTable = () => {
     });
 
     const handleFileUpload = async (e) => {
+
+        const fileInput = document.getElementById('timeTableFile');
+        const file = fileInput.files[0];
+
+        if (timeTableDetails.semester === '' || timeTableDetails.section === '') {
+            failure('Please fill all the fields');
+            fileInput.value = null;
+            return;
+        }
+
         try {
             setLoading(true);
-            const fileInput = document.getElementById('timeTableFile');
-            const file = fileInput.files[0];
 
             const client = new Client()
                 .setEndpoint('https://cloud.appwrite.io/v1')
@@ -45,7 +53,7 @@ const UploadTimeTable = () => {
             toast.promise(
                 Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
                 {
-                    success: () => 'TimeTable successfully uploaded!',
+                    success: () => 'File successfully uploaded!',
                     error: () => 'Error uploading timetable.',
                     duration: 3000,
                     position: 'top-center',
@@ -53,6 +61,7 @@ const UploadTimeTable = () => {
             );
 
             fileInput.value = null; // Clear the file input value after successful upload
+            handleTimeTableInputSubmit(uploadedFile.href);
             setLoading(false);
         } catch (error) {
             failure(error.message);
@@ -68,7 +77,7 @@ const UploadTimeTable = () => {
         }));
     };
 
-    const handleTimeTableInputSubmit = async () => {
+    const handleTimeTableInputSubmit = async (url) => {
         try {
             const client = new Client()
                 .setEndpoint('https://cloud.appwrite.io/v1')
@@ -83,7 +92,7 @@ const UploadTimeTable = () => {
                 {
                     semester: timeTableDetails.semester,
                     section: timeTableDetails.section,
-                    url: timeTableDetails.url,
+                    url: url,
                 },
             );
 
@@ -106,18 +115,6 @@ const UploadTimeTable = () => {
             section: '',
             url: null,
         });
-    };
-
-    const CheckValidity = () => {
-        if (timeTableDetails.semester === '' || timeTableDetails.section === '') {
-            failure('Please fill all the fields');
-        }
-        else if (timeTableDetails.url === null) {
-            failure('Please upload a file');
-        }
-        else {
-            handleTimeTableInputSubmit();
-        }
     };
 
     const renderFileUpload = () => {
@@ -185,12 +182,12 @@ const UploadTimeTable = () => {
                                     placeholder="Enter the section"
                                 />
                             </form>
-                            <div className="button mt-2 lg:mt-0">
+                            {/* <div className="button mt-2 lg:mt-0">
                                 <button onClick={CheckValidity} className="group bg-pink-500 relative inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 p-2 mt-5 font-medium tracking-wide text-xl shadow-2xl border border-[#b2b4b6] hover:scale-105 transition duration-300 ease-out text-white hover:shadow-orange-600 active:translate-y-1">
                                     <span className="absolute inset-0 bg-pink-500 opacity-0  transition duration-300 ease-out  group-hover:opacity-100  group-active:opacity-90"></span>
                                     <span className="relative">Upload</span>
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="fileUpload bg-[#262626] text-center rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
                             {renderFileUpload()}
