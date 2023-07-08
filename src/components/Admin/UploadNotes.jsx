@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Client, Databases, Storage, ID } from 'appwrite';
+import React, { useEffect, useState } from 'react';
+import { Client, Databases, Storage, ID, Query } from 'appwrite';
 import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,6 +11,8 @@ const UploadNotes = () => {
     const [loading, setLoading] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState('');
     const [selectedSemester, setSelectedSemester] = useState('');
+    const [selectedSubject, setSelectedSubject] = useState({ subjectCode: '', subject: '' });
+    const [subjects, setSubjects] = useState([{ subjectCode: '', subjectName: '' }]); // [ { subjectCode: '', subjectName: '' }
     const [lab, setLab] = useState(false);
     const [notesDetails, setNotesDetails] = useState({
         name: '',
@@ -20,6 +22,39 @@ const UploadNotes = () => {
         url: null,
         extension: '',
     });
+
+    const fetchSubjects = async () => {
+        try {
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1')
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+
+            const databases = new Databases(client);
+
+            const result = await databases.listDocuments(
+                process.env.NEXT_PUBLIC_DATABASE_ID,
+                process.env.NEXT_PUBLIC_SUBJECTS_COLLECTION_ID,
+                [Query.equal('semester', selectedSemester)]
+            );
+
+            if (result.total === 0) {
+                setSubjects([{ subjectCode: '', subjectName: '' }]);
+                failure('Ask Admin to upload the subjects first');
+                return;
+            } else {
+                setSubjects(JSON.parse(result.documents[0].subjects));
+            }
+        } catch (error) {
+            console.log(error);
+            failure('Ask Admin to upload the subjects first');
+        }
+    }
+
+    useEffect(() => {
+        if (selectedSemester !== '') {
+            fetchSubjects();
+        }
+    }, [selectedSemester]);
 
     const handleFileUpload = async (e) => {
 
@@ -121,6 +156,20 @@ const UploadNotes = () => {
         }
     };
 
+    const handleSelectedSubjectChange = (e) => {
+        const { value } = e.target;
+        const subjectCode = value.split(':')[0];
+        const subject = value.split(':')[1];
+        setSelectedSubject({ subjectCode, subject });
+        if (subjectCode !== '' && subject !== '') {
+            setNotesDetails((prevDetails) => ({
+                ...prevDetails,
+                subjectCode,
+                subject
+            }));
+        }
+    };
+
     const handleInputSubmit = async (url, extension) => {
         try {
             const client = new Client()
@@ -161,6 +210,8 @@ const UploadNotes = () => {
 
         setSelectedCourse('');
         setSelectedSemester('');
+        setSelectedSubject({ subjectCode: '', subject: '' });
+        setSubjects([{ subjectCode: '', subjectName: '' }]);
         setNotesDetails({
             name: '',
             subject: '',
@@ -291,27 +342,18 @@ const UploadNotes = () => {
                                     placeholder="Enter the file name..."
                                 />
 
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="text"
-                                    name="subject"
-                                    id="subject"
-                                    value={notesDetails.subject}
-                                    placeholder="Enter the Subject..."
-                                />
-
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="text"
-                                    name="subjectCode"
-                                    id="subjectCode"
-                                    value={notesDetails.subjectCode}
-                                    placeholder="Enter the Subject Code..."
-                                />
+                                <select
+                                    value={selectedSubject.subjectCode !== '' ? `${selectedSubject.subjectCode}:${selectedSubject.subject}` : ''}
+                                    onChange={handleSelectedSubjectChange}
+                                    className="p-4 my-2 rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
+                                >
+                                    <option value="">Select a subject</option>
+                                    {subjects.map((subject, index) => (
+                                        <option key={index} value={`${subject.subjectCode}:${subject.subjectName}`}>
+                                            {subject.subjectCode} : {subject.subjectName}
+                                        </option>
+                                    ))}
+                                </select>
 
                                 <input
                                     onChange={handleInputChange}
