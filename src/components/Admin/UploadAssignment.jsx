@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Client, Databases, Storage, ID } from 'appwrite';
+import React, { useEffect, useState } from 'react';
+import { Client, Databases, Storage, ID, Query } from 'appwrite';
 import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,6 +11,8 @@ const UploadAssignments = () => {
     const [loading, setLoading] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState('');
     const [selectedSemester, setSelectedSemester] = useState('');
+    const [selectedSubject, setSelectedSubject] = useState({ subjectCode: '', subject: '' });
+    const [subjects, setSubjects] = useState([{ subjectCode: '', subjectName: '' }]);
     const [assignmentDetails, setAssignmentDetails] = useState({
         name: '',
         subject: '',
@@ -18,6 +20,39 @@ const UploadAssignments = () => {
         url: null,
         extension: '',
     });
+
+    const fetchSubjects = async () => {
+        try {
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1')
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+
+            const databases = new Databases(client);
+
+            const result = await databases.listDocuments(
+                process.env.NEXT_PUBLIC_DATABASE_ID,
+                process.env.NEXT_PUBLIC_SUBJECTS_COLLECTION_ID,
+                [Query.equal('semester', selectedSemester)]
+            );
+
+            if (result.total === 0) {
+                setSubjects([{ subjectCode: '', subjectName: '' }]);
+                failure('Ask Admin to upload the subjects first');
+                return;
+            } else {
+                setSubjects(JSON.parse(result.documents[0].subjects));
+            }
+        } catch (error) {
+            console.log(error);
+            failure('Ask Admin to upload the subjects first');
+        }
+    }
+
+    useEffect(() => {
+        if (selectedSemester !== '') {
+            fetchSubjects();
+        }
+    }, [selectedSemester]);
 
     const handleFileUpload = async (e) => {
 
@@ -111,6 +146,20 @@ const UploadAssignments = () => {
             setSelectedSemester(value);
     };
 
+    const handleSelectedSubjectChange = (e) => {
+        const { value } = e.target;
+        const subjectCode = value.split(':')[0];
+        const subject = value.split(':')[1];
+        setSelectedSubject({ subjectCode, subject });
+        if (subjectCode !== '' && subject !== '') {
+            setAssignmentDetails((prevDetails) => ({
+                ...prevDetails,
+                subjectCode,
+                subject
+            }));
+        }
+    };
+
     const handleInputSubmit = async (url, extension) => {
         try {
             const client = new Client()
@@ -150,6 +199,8 @@ const UploadAssignments = () => {
 
         setSelectedCourse('');
         setSelectedSemester('');
+        setSelectedSubject({ subjectCode: '', subject: '' });
+        setSubjects([{ subjectCode: '', subjectName: '' }]);
         setAssignmentDetails({
             name: '',
             subject: '',
@@ -277,35 +328,20 @@ const UploadAssignments = () => {
                                     placeholder="Enter the assignment name..."
                                 />
 
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="text"
-                                    name="subject"
-                                    id="subject"
-                                    value={assignmentDetails.subject}
-                                    placeholder="Enter the Subject..."
-                                />
-
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="text"
-                                    name="subjectCode"
-                                    id="subjectCode"
-                                    value={assignmentDetails.subjectCode}
-                                    placeholder="Enter the Subject Code..."
-                                />
+                                <select
+                                    value={selectedSubject.subjectCode !== '' ? `${selectedSubject.subjectCode}:${selectedSubject.subject}` : ''}
+                                    onChange={handleSelectedSubjectChange}
+                                    className="p-4 my-2 rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
+                                >
+                                    <option value="">Select a subject</option>
+                                    {subjects.map((subject, index) => (
+                                        <option key={index} value={`${subject.subjectCode}:${subject.subjectName}`}>
+                                            {subject.subjectCode} : {subject.subjectName}
+                                        </option>
+                                    ))}
+                                </select>
 
                             </form>
-                            {/* <div className="button mt-2 lg:mt-2">
-                                <button onClick={CheckValidity} className="group bg-pink-500 relative inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 p-2 font-medium tracking-wide text-xl shadow-2xl border border-[#b2b4b6] hover:scale-105 transition duration-300 ease-out text-white hover:shadow-orange-600 active:translate-y-1">
-                                    <span className="absolute inset-0 bg-pink-500 opacity-0  transition duration-300 ease-out  group-hover:opacity-100  group-active:opacity-90"></span>
-                                    <span className="relative">Upload</span>
-                                </button>
-                            </div> */}
                         </div>
                         <div className="fileUpload bg-[#262626] text-center rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
                             {renderFileUpload()}
