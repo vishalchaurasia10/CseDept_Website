@@ -182,12 +182,6 @@ const UploadTimeTable = () => {
                                     placeholder="Enter the section"
                                 />
                             </form>
-                            {/* <div className="button mt-2 lg:mt-0">
-                                <button onClick={CheckValidity} className="group bg-pink-500 relative inline-flex items-center justify-center overflow-hidden rounded-3xl px-8 p-2 mt-5 font-medium tracking-wide text-xl shadow-2xl border border-[#b2b4b6] hover:scale-105 transition duration-300 ease-out text-white hover:shadow-orange-600 active:translate-y-1">
-                                    <span className="absolute inset-0 bg-pink-500 opacity-0  transition duration-300 ease-out  group-hover:opacity-100  group-active:opacity-90"></span>
-                                    <span className="relative">Upload</span>
-                                </button>
-                            </div> */}
                         </div>
                         <div className="fileUpload bg-[#262626] text-center rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
                             {renderFileUpload()}
