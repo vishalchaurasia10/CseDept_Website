@@ -9,7 +9,7 @@ const failure = (message) => toast.error(message, { duration: 3000 });
 const UploadSubjects = () => {
     const [loading, setLoading] = useState(false);
     const [semester, setSemester] = useState('');
-    const [course , setCourse] = useState('')
+    const [course, setCourse] = useState('')
     const [subjects, setSubjects] = useState([{ subjectCode: '', subjectName: '' }]);
     const [alreadyUploaded, setAlreadyUploaded] = useState(false)
     const [subjectID, setSubjectID] = useState('')
@@ -30,7 +30,6 @@ const UploadSubjects = () => {
 
             if (result.total === 0) {
                 setSubjects([{ subjectCode: '', subjectName: '' }]);
-                setCourse('')
                 setAlreadyUploaded(false)
                 return;
             } else {
@@ -50,7 +49,7 @@ const UploadSubjects = () => {
         if (semester !== '' && course !== '') {
             fetchSubjects();
         }
-    }, [semester,course]);
+    }, [semester, course]);
 
     const handleInputChange = (event, index) => {
         const { name, value } = event.target;
@@ -62,7 +61,7 @@ const UploadSubjects = () => {
             setSemester(value);
         }
 
-        if(name === 'course'){
+        if (name === 'course') {
             setCourse(value)
         }
     };
