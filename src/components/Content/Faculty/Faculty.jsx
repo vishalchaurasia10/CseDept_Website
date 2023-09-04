@@ -8,6 +8,7 @@ import roleContext from '@/context/role/roleContext';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Toaster, toast } from 'react-hot-toast';
+import Loader from '@/components/Layout/Loader';
 
 const Faculty = () => {
 
@@ -133,9 +134,7 @@ const Faculty = () => {
         <>
             <Toaster />
             {loading ?
-                <div className="loading flex items-center justify-center h-screen">
-                    <Image src='/images/loading.gif' width={300} height={300} alt='notes' />
-                </div>
+                <Loader />
                 :
                 (faculty.length == 0 ?
                     <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">

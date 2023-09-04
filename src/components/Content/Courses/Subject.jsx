@@ -7,6 +7,7 @@ import loadingContext from '@/context/loading/loadingContext';
 import assignmentContext from '@/context/assignments/assignmentContext';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import Loader from '@/components/Layout/Loader';
 
 const Subject = () => {
     const [data, setData] = useState({ subjects: [], assignments: [] });
@@ -18,7 +19,7 @@ const Subject = () => {
     const { assignment, fetchSemestersAssignments } = AssignmentContext;
     const router = useRouter();
     const { semester } = router.query;
-    const {course} = router.query;
+    const { course } = router.query;
     const targetSemester = semester ? semester[semester.length - 1] : null;
     const [ref, inView] = useInView({
         triggerOnce: true,
@@ -59,7 +60,7 @@ const Subject = () => {
     };
 
     const fetchAssignmentData = async () => {
-        await fetchSemestersAssignments(targetSemester,-1);
+        await fetchSemestersAssignments(targetSemester, -1);
     };
 
     const applyFilter = () => {
@@ -93,9 +94,7 @@ const Subject = () => {
     return (
         <>
             {loading ? (
-                <div className="loading flex items-center justify-center h-screen">
-                    <Image src="/images/loading.gif" width={300} height={300} alt="notes" />
-                </div>
+                <Loader />
             ) : data.subjects.length === 0 ? (
                 <div className="404 flex space-y-5 flex-col items-center justify-center h-screen">
                     <Image src="/images/error.gif" width={300} height={300} alt="notes" />

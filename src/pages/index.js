@@ -3,8 +3,8 @@ import Hero from "@/components/Content/Home/Hero";
 import Hod from "@/components/Content/Home/Hod";
 import Industry from "@/components/Content/Home/Industry";
 import Vision from "@/components/Content/Home/Vision";
+import Loader from "@/components/Layout/Loader";
 import Head from "next/head";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -36,9 +36,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {isLoading ? (
-        <div className="loading flex items-center justify-center h-screen">
-          <Image src="/images/loading.gif" width={300} height={300} alt="loading" />
-        </div>
+        <Loader />
       ) : (
         <div className="wrapper">
           <Hero />

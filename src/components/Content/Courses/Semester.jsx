@@ -5,6 +5,7 @@ import loadingContext from '@/context/loading/loadingContext';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import noteContext from '@/context/notes/noteContext';
+import Loader from '@/components/Layout/Loader';
 
 const Semester = () => {
 
@@ -92,9 +93,7 @@ const Semester = () => {
     return (
         <>
             {loading ?
-                <div className="loading flex items-center justify-center h-screen">
-                    <Image src='/images/loading.gif' width={300} height={300} alt='notes' />
-                </div>
+                <Loader />
                 :
                 (
                     <>
