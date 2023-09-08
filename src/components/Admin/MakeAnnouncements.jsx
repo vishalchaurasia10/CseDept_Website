@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react'
-import { Client, Databases, Storage, ID } from 'appwrite';
+import React, { useContext, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
+import announcementContext from '@/context/announcement/announcementContext';
+import { inputFields1, inputFields2 } from '@/utils/constants';
 
 
 const failure = (message) => toast.error(message, { duration: 3000 });
@@ -11,100 +12,8 @@ const failureLong = (message) => toast.error(message, { duration: 3000, style: {
 const MakeAnnouncements = () => {
 
     const [loading, setLoading] = useState(false);
+    const { uploadAnnouncementFile, uploadAnnouncementDocument } = useContext(announcementContext);
     const [announcementDetails, setAnnouncementDetails] = useState({ title: '', description: '', url: null, date: '', venue: '', time: '' })
-
-    const handleFileUpload = async (e) => {
-        try {
-            setLoading(true);
-            const fileInput = document.getElementById('announcementsFile');
-            const file = fileInput.files[0];
-
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-            const storage = new Storage(client);
-
-            const result = await storage.createFile(
-                process.env.NEXT_PUBLIC_ANNOUNCEMENTS_BUCKET_ID,
-                ID.unique(),
-                file
-            );
-
-
-            const fileId = result.$id;
-            const uploadedFile = storage.getFileView(
-                process.env.NEXT_PUBLIC_ANNOUNCEMENTS_BUCKET_ID,
-                fileId
-            );
-            setAnnouncementDetails((prevDetails) => ({
-                ...prevDetails,
-                url: uploadedFile.href,
-            }));
-
-            toast.promise(
-                Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
-                {
-                    success: () => 'Link successfully uploaded!',
-                    error: () => 'Error uploading link.',
-                    duration: 3000,
-                    position: 'top-center',
-                }
-            );
-
-            fileInput.value = null; // Clear the file input value after successful upload
-            setLoading(false);
-        } catch (error) {
-            failure('Something went wrong');
-            setLoading(false);
-        }
-    };
-
-    const handleInputSubmit = async () => {
-        try {
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-
-            const databases = new Databases(client);
-
-            const formattedDateTime = `${announcementDetails.date} ${announcementDetails.time}:00.000`;
-
-            const result = await databases.createDocument(
-                process.env.NEXT_PUBLIC_DATABASE_ID,
-                process.env.NEXT_PUBLIC_ANNOUNCEMENTS_COLLECTION_ID,
-                ID.unique(),
-                {
-                    title: announcementDetails.title,
-                    description: announcementDetails.description,
-                    venue: announcementDetails.venue,
-                    date: formattedDateTime,
-                    url: announcementDetails.url,
-                },
-            );
-
-            toast.promise(
-                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
-                {
-                    success: () => 'Announcement successfully uploaded!',
-                    error: () => 'Error uploading announcement.',
-                    duration: 3000,
-                    position: 'top-center',
-                }
-            );
-
-        } catch (error) {
-            failure(error.message);
-        }
-
-        setAnnouncementDetails({
-            title: '',
-            description: '',
-            url: null,
-            date: '',
-            venue: '',
-            time: ''
-        });
-    };
 
     const CheckValidity = () => {
         if (announcementDetails.title === '' || announcementDetails.description === '') {
@@ -117,7 +26,15 @@ const MakeAnnouncements = () => {
             failureLong('Description should be atleast 10 characters long');
         }
         else {
-            handleInputSubmit();
+            uploadAnnouncementDocument(announcementDetails);
+            setAnnouncementDetails({
+                title: '',
+                description: '',
+                url: null,
+                date: '',
+                venue: '',
+                time: ''
+            });
         }
     };
 
@@ -144,61 +61,35 @@ const MakeAnnouncements = () => {
                             </div>
                             <form>
 
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="text"
-                                    name="title"
-                                    id="title"
-                                    value={announcementDetails.title}
-                                    placeholder="Enter the announcement title"
-                                />
-
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="text"
-                                    name="description"
-                                    id="description"
-                                    value={announcementDetails.description}
-                                    placeholder="Enter the description"
-                                />
-
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="text"
-                                    name="venue"
-                                    id="venue"
-                                    value={announcementDetails.venue}
-                                    placeholder="Enter the venue(if any)"
-                                />
+                                {inputFields1.map((field, index) => (
+                                    <input
+                                        key={index} // Use a unique key for each input element
+                                        onChange={handleInputChange}
+                                        required
+                                        className="p-4 my-2 rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
+                                        type={field.type}
+                                        name={field.name}
+                                        id={field.name}
+                                        value={announcementDetails[field.name]}
+                                        placeholder={field.placeholder}
+                                    />
+                                ))}
 
                                 <div className="datetime flex space-x-4">
-                                    <input
-                                        onChange={handleInputChange}
-                                        required
-                                        className="p-4 my-2 w-1/2  rounded-lg shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                        type="date"
-                                        name="date"
-                                        id="date"
-                                        value={announcementDetails.date}
-                                        placeholder="Enter the date(if any)"
-                                    />
 
-                                    <input
-                                        onChange={handleInputChange}
-                                        required
-                                        className="p-4 my-2  rounded-lg w-1/2 shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                        type="time"
-                                        name="time"
-                                        id="time"
-                                        value={announcementDetails.time}
-                                        placeholder="Enter the time(if any)"
-                                    />
+                                    {inputFields2.map((field, index) => (
+                                        <input
+                                            key={index} // Use a unique key for each input element
+                                            onChange={handleInputChange}
+                                            required
+                                            className="p-4 my-2 w-1/2  rounded-lg shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
+                                            type={field.type}
+                                            name={field.name}
+                                            id={field.name}
+                                            value={announcementDetails[field.name]}
+                                            placeholder={field.placeholder}
+                                        />
+                                    ))}
                                 </div>
 
 
@@ -219,7 +110,15 @@ const MakeAnnouncements = () => {
 
                                     <button className="group cursor-default relative inline-flex items-center justify-center overflow-hidden rounded-md px-4 lg:px-8 py-3 font-medium tracking-wide text-white text-xl shadow-2xl border border-[rgba(255,255,255,0.5)]  hover:border-slate-100/20 hover:scale-110 transition duration-300 ease-out  hover:shadow-orange-600 active:translate-y-1">
                                         <input
-                                            onChange={handleFileUpload}
+                                            onChange={async () => {
+                                                let file = document.getElementById('announcementsFile').files[0]
+                                                let announcementUrl = await uploadAnnouncementFile(file, announcementDetails)
+                                                setAnnouncementDetails((prevDetails) => ({
+                                                    ...prevDetails,
+                                                    url: announcementUrl
+                                                }));
+                                                file = null;
+                                            }}
                                             className="hidden"
                                             type="file"
                                             name="announcementsFile"

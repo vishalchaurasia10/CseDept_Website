@@ -63,3 +63,34 @@ export const semesterDetails = [
         key: 8,
     },
 ]
+
+export const inputFields1 = [
+    {
+        name: 'title',
+        type: 'text',
+        placeholder: 'Enter the announcement title',
+    },
+    {
+        name: 'description',
+        type: 'text',
+        placeholder: 'Enter the description',
+    },
+    {
+        name: 'venue',
+        type: 'text',
+        placeholder: 'Enter the venue(if any)',
+    },
+];
+
+export const inputFields2 = [
+    {
+        name: 'date',
+        type: 'date',
+        placeholder: 'Enter the date(if any)',
+    },
+    {
+        name: 'time',
+        type: 'time',
+        placeholder: 'Enter the time(if any)',
+    },
+];
