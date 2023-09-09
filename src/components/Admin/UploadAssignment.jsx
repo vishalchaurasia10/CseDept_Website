@@ -113,7 +113,7 @@ const UploadAssignments = () => {
             <div className="preview flex flex-col items-center justify-center mb-8">
                 <Image className=" h-full w-full" src="/images/uploaded.svg" width={200} height={200} alt='Upload Image' />
                 <Link target='_blank' href={assignmentDetails.url}>
-                    <button className="group relative mt-10 inline-flex items-center justify-center overflow-hidden rounded-md px-8 py-3 font-medium tracking-wide text-white text-xl shadow-2xl border border-[rgba(255,255,255,0.5)]  hover:border-slate-100/20 hover:scale-110 transition duration-300 ease-out  hover:shadow-orange-600 active:translate-y-1">
+                    <button className="group relative inline-flex items-center justify-center overflow-hidden rounded-md px-8 py-3 font-medium tracking-wide text-white text-xl shadow-2xl border border-[rgba(255,255,255,0.5)]  hover:border-slate-100/20 hover:scale-110 transition duration-300 ease-out  hover:shadow-orange-600 active:translate-y-1">
                         <span className="absolute inset-0 bg-gradient-to-r from-orange-400 via-pink-500  to-purple-500 opacity-0  transition duration-300 ease-out  group-hover:opacity-100  group-active:opacity-90"></span>
                         <span className="relative">Preview</span>
                     </button>
@@ -125,8 +125,8 @@ const UploadAssignments = () => {
     return (
         <>
             <Toaster />
-            <div className="wrapper px-2 md:scale-90 lg:px-40 mb-5 lg:mb-10 flex items-center justify-center">
-                <div className="container shadow-2xl shadow-black bg-[#D7D9DD] text-[#262626] font-jost mt-16 w-full rounded-2xl border-2 border-white">
+            <div className="wrapper px-2 md:scale-90 lg:px-40 flex items-center justify-center">
+                <div className="container shadow-2xl shadow-black bg-[#D7D9DD] text-[#262626] font-jost w-full rounded-2xl border-2 border-white">
                     <div className="content flex flex-col lg:flex-row">
                         <div className="heading lg:hidden block mt-6 px-7 font-bold">
                             <h1 className=" text-5xl lg:text-7xl font-jost">Upload Assignments</h1>
