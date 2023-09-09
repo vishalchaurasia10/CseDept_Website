@@ -10,6 +10,7 @@ import ImportantlinkState from '@/context/importantLinks/ImportantlinkState'
 import AssignmentState from '@/context/assignments/AssignmentState'
 import RoleState from '@/context/role/RoleState'
 import CommonState from '@/context/CommonStates/CommonState'
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App({ Component, pageProps }) {
   return (
@@ -25,6 +26,7 @@ export default function App({ Component, pageProps }) {
                     <TimetableState>
                       <ImportantlinkState>
                         <Component {...pageProps} />
+                        <Analytics />
                       </ImportantlinkState>
                     </TimetableState>
                   </FacultyState>
