@@ -91,7 +91,7 @@ const SignIn = () => {
       <Toaster />
       <div className={`wrapper transition-all px-5 lg:px-0 duration-300 h-screen font-jost bg-gray-200 flex justify-center items-center`}>
         {/* <div className="content px-4 lg:px-0 lg:order-1 w-full lg:w-1/2 py-3 flex justify-center items-center"> */}
-        <div className="content w-full md:w-[27%] border bg-pureWhite border-gray-300 p-6 rounded-2xl shadow-2xl shadow-black">
+        <div className="content w-full md:w-1/2 lg:w-[27%] border bg-pureWhite border-gray-300 p-6 rounded-2xl shadow-2xl shadow-black">
           <div className="heading py-4">
             <h1 className='bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 text-2xl font-jost'>Sign in</h1>
             <h3>to continue as admin/faculty</h3>

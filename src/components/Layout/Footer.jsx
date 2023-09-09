@@ -61,7 +61,7 @@ const Footer = () => {
                 </div>
                 <div className="name order-1 lg:order-2 pb-3 lg:pb-4 flex items-center space-x-2 pl-4 pr-20 lg:justify-end lg:w-[40%] bg-[#262626]">
                     <FaGlobeAmericas className='text-xl text-white' />
-                    <p className='text-white text-sm text-center'><a className='hover:underline whitespace-nowrap' href="https://www.linkedin.com/in/vishal-chaurasia-9a421022a/" target='_blank'>Developed by Vishal Chaurasia</a></p>
+                    <p className='text-white text-sm text-center'><a className='hover:underline whitespace-nowrap' href="https://www.vishalchaurasia.tech/" target='_blank'>Developed by Vishal Chaurasia</a></p>
                 </div>
             </div>
         </>
