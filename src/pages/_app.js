@@ -9,6 +9,7 @@ import '@/styles/globals.css'
 import ImportantlinkState from '@/context/importantLinks/ImportantlinkState'
 import AssignmentState from '@/context/assignments/AssignmentState'
 import RoleState from '@/context/role/RoleState'
+import CommonState from '@/context/CommonStates/CommonState'
 
 export default function App({ Component, pageProps }) {
   return (
@@ -16,19 +17,21 @@ export default function App({ Component, pageProps }) {
       <RoleState>
         <Navbar />
         <LoadingState>
-          <AnnouncementState>
-            <NoteState>
-              <AssignmentState>
-                <FacultyState>
-                  <TimetableState>
-                    <ImportantlinkState>
-                      <Component {...pageProps} />
-                    </ImportantlinkState>
-                  </TimetableState>
-                </FacultyState>
-              </AssignmentState>
-            </NoteState>
-          </AnnouncementState>
+          <CommonState>
+            <AnnouncementState>
+              <NoteState>
+                <AssignmentState>
+                  <FacultyState>
+                    <TimetableState>
+                      <ImportantlinkState>
+                        <Component {...pageProps} />
+                      </ImportantlinkState>
+                    </TimetableState>
+                  </FacultyState>
+                </AssignmentState>
+              </NoteState>
+            </AnnouncementState>
+          </CommonState>
         </LoadingState>
         <Footer />
       </RoleState>

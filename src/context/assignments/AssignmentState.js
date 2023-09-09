@@ -1,13 +1,110 @@
 import { useContext, useState } from "react";
 import AssignmentContext from "./assignmentContext";
-import { Client, Databases, Query, Storage } from "appwrite";
+import { Client, Databases, ID, Query, Storage } from "appwrite";
 import loadingContext from "../loading/loadingContext";
+import { Toaster, toast } from "react-hot-toast";
 
 const AssignmentState = (props) => {
 
     const [assignment, setAssignment] = useState([])
     const LoadingContext = useContext(loadingContext);
     const { setLoading } = LoadingContext;
+
+    const uploadAssignmentFile = async (file, assignmentDetails, setAssignmentDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester) => {
+        try {
+            setLoading(true);
+
+            setAssignmentDetails((prevDetails) => ({
+                ...prevDetails,
+                extension: '.' + file.name.split('.').pop()
+            }));
+
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1')
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+            const storage = new Storage(client);
+
+            const result = await storage.createFile(
+                process.env.NEXT_PUBLIC_ASSIGNMENTS_BUCKET_ID,
+                ID.unique(),
+                file
+            );
+
+            const fileId = result.$id;
+            const uploadedFile = storage.getFileView(
+                process.env.NEXT_PUBLIC_ASSIGNMENTS_BUCKET_ID,
+                fileId
+            );
+            setAssignmentDetails((prevDetails) => ({
+                ...prevDetails,
+                url: uploadedFile.href,
+            }));
+
+            toast.promise(
+                Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Document successfully uploaded!',
+                    error: () => 'Error uploading document.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+
+            uploadAssignmentDocument(uploadedFile.href, '.' + file.name.split('.').pop(), assignmentDetails, setAssignmentDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester);
+            setLoading(false);
+        } catch (error) {
+            failure('Something went wrong');
+            setLoading(false);
+        }
+    };
+
+    const uploadAssignmentDocument = async (url, extension, assignmentDetails, setAssignmentDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester) => {
+        try {
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1')
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+
+            const databases = new Databases(client);
+
+            const result = await databases.createDocument(
+                process.env.NEXT_PUBLIC_DATABASE_ID,
+                process.env.NEXT_PUBLIC_ASSIGNMENTS_COLLECTION_ID,
+                ID.unique(),
+                {
+                    name: assignmentDetails.name,
+                    subject: assignmentDetails.subject,
+                    subjectCode: assignmentDetails.subjectCode,
+                    semester: selectedSemester,
+                    url: url,
+                    extension: extension,
+                    course: selectedCourse,
+                },
+            );
+
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Assignment successfully uploaded!',
+                    error: () => 'Error uploading assignment.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+
+        } catch (error) {
+            failure('Something went wrong');
+        }
+
+        setSelectedCourse('');
+        setSelectedSemester('');
+        setAssignmentDetails({
+            name: '',
+            subject: '',
+            subjectCode: '',
+            url: null,
+            extension: '',
+        });
+    };
 
     const fetchAssignment = async () => {
         try {
@@ -95,9 +192,12 @@ const AssignmentState = (props) => {
 
 
     return (
-        <AssignmentContext.Provider value={{ assignment, setAssignment, fetchAssignment, fetchSemestersAssignments, deleteAssignment }}>
-            {props.children}
-        </AssignmentContext.Provider>
+        <>
+            <Toaster />
+            <AssignmentContext.Provider value={{ assignment, setAssignment, fetchAssignment, fetchSemestersAssignments, deleteAssignment, uploadAssignmentFile }}>
+                {props.children}
+            </AssignmentContext.Provider>
+        </>
     )
 }
 

@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Client, Databases, Storage, ID, Query } from 'appwrite';
+import React, { useContext, useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
 import Link from 'next/link';
+import commonContext from '@/context/CommonStates/commonContex';
+import assignmentContext from '@/context/assignments/assignmentContext';
+import { courseOptions, semesterOptions } from '@/utils/constants';
 
 const failure = (message) => toast.error(message, { duration: 3000 });
 const failureLong = (message) => toast.error(message, { duration: 3000, style: { minWidth: '380px' } });
 
 const UploadAssignments = () => {
     const [loading, setLoading] = useState(false);
+    const { fetchSubjects, subjects } = useContext(commonContext);
+    const { uploadAssignmentFile } = useContext(assignmentContext);
     const [selectedCourse, setSelectedCourse] = useState('');
     const [selectedSemester, setSelectedSemester] = useState('');
     const [selectedSubject, setSelectedSubject] = useState({ subjectCode: '', subject: '' });
-    const [subjects, setSubjects] = useState([{ subjectCode: '', subjectName: '' }]);
     const [assignmentDetails, setAssignmentDetails] = useState({
         name: '',
         subject: '',
@@ -21,40 +24,14 @@ const UploadAssignments = () => {
         extension: '',
     });
 
-    const fetchSubjects = async () => {
-        try {
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-
-            const databases = new Databases(client);
-
-            const result = await databases.listDocuments(
-                process.env.NEXT_PUBLIC_DATABASE_ID,
-                process.env.NEXT_PUBLIC_SUBJECTS_COLLECTION_ID,
-                [Query.equal('semester', selectedSemester), Query.equal('course', selectedCourse)]
-            );
-
-            if (result.total === 0) {
-                setSubjects([{ subjectCode: '', subjectName: '' }]);
-                failure('Ask Admin to upload the subjects first');
-                return;
-            } else {
-                setSubjects(JSON.parse(result.documents[0].subjects));
-            }
-        } catch (error) {
-            console.log(error);
-            failure('Ask Admin to upload the subjects first');
-        }
-    }
-
     useEffect(() => {
         if (selectedSemester !== '' && selectedCourse !== '') {
-            fetchSubjects();
+            fetchSubjects(selectedSemester, selectedCourse);
         }
-    }, [selectedSemester,selectedCourse]);
+    }, [selectedSemester, selectedCourse]);
 
-    const handleFileUpload = async (e) => {
+
+    const manageAssignmentFileUpload = (e) => {
 
         const fileInput = document.getElementById('assignmentFile');
         const file = fileInput.files[0];
@@ -84,53 +61,10 @@ const UploadAssignments = () => {
             return
         }
 
-        try {
-            setLoading(true);
-
-            setAssignmentDetails((prevDetails) => ({
-                ...prevDetails,
-                extension: '.' + file.name.split('.').pop()
-            }));
-
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-            const storage = new Storage(client);
-
-            const result = await storage.createFile(
-                process.env.NEXT_PUBLIC_ASSIGNMENTS_BUCKET_ID,
-                ID.unique(),
-                file
-            );
-
-            const fileId = result.$id;
-            const uploadedFile = storage.getFileView(
-                process.env.NEXT_PUBLIC_ASSIGNMENTS_BUCKET_ID,
-                fileId
-            );
-            setAssignmentDetails((prevDetails) => ({
-                ...prevDetails,
-                url: uploadedFile.href,
-            }));
-
-            toast.promise(
-                Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
-                {
-                    success: () => 'Document successfully uploaded!',
-                    error: () => 'Error uploading document.',
-                    duration: 3000,
-                    position: 'top-center',
-                }
-            );
-
-            fileInput.value = null; // Clear the file input value after successful upload
-            handleInputSubmit(uploadedFile.href, '.' + file.name.split('.').pop());
-            setLoading(false);
-        } catch (error) {
-            failure('Something went wrong');
-            setLoading(false);
-        }
-    };
+        uploadAssignmentFile(file, assignmentDetails, setAssignmentDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester)
+        fileInput.value = null;
+        setSelectedSubject({ subjectCode: '', subject: '' });
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -160,56 +94,6 @@ const UploadAssignments = () => {
         }
     };
 
-    const handleInputSubmit = async (url, extension) => {
-        try {
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-
-            const databases = new Databases(client);
-
-            const result = await databases.createDocument(
-                process.env.NEXT_PUBLIC_DATABASE_ID,
-                process.env.NEXT_PUBLIC_ASSIGNMENTS_COLLECTION_ID,
-                ID.unique(),
-                {
-                    name: assignmentDetails.name,
-                    subject: assignmentDetails.subject,
-                    subjectCode: assignmentDetails.subjectCode,
-                    semester: selectedSemester,
-                    url: url,
-                    extension: extension,
-                    course: selectedCourse,
-                },
-            );
-
-            toast.promise(
-                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
-                {
-                    success: () => 'Assignment successfully uploaded!',
-                    error: () => 'Error uploading assignment.',
-                    duration: 3000,
-                    position: 'top-center',
-                }
-            );
-
-        } catch (error) {
-            failure('Something went wrong');
-        }
-
-        setSelectedCourse('');
-        setSelectedSemester('');
-        setSelectedSubject({ subjectCode: '', subject: '' });
-        setSubjects([{ subjectCode: '', subjectName: '' }]);
-        setAssignmentDetails({
-            name: '',
-            subject: '',
-            subjectCode: '',
-            url: null,
-            extension: '',
-        });
-    };
-
     const renderFileUpload = () => {
         if (!assignmentDetails.url) {
             return (
@@ -218,7 +102,7 @@ const UploadAssignments = () => {
                         <Image className=" h-full w-full cursor-pointer" src="/images/upload.svg" width={200} height={200} alt='Upload Image' />
                         {loading && <Image className='relative mx-auto mb-4 lg:mb-0 h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
                         {/* <FaCloudUploadAlt className="text-[#F02D65] -mt-20 text-[15rem] cursor-pointer" /> */}
-                        <input onChange={handleFileUpload} className="hidden" type="file" name="assignmentFile" id="assignmentFile" />
+                        <input onChange={manageAssignmentFileUpload} className="hidden" type="file" name="assignmentFile" id="assignmentFile" />
                     </label>
                     <button className='text-white text-sm mb-4'>Click on above image to upload file</button>
                 </>
@@ -228,7 +112,6 @@ const UploadAssignments = () => {
         return (
             <div className="preview flex flex-col items-center justify-center mb-8">
                 <Image className=" h-full w-full" src="/images/uploaded.svg" width={200} height={200} alt='Upload Image' />
-                {/* <FaFilePdf className="text-[#F02D65] -mt-10 mb-8 lg:-mt-20 cursor-pointer text-[15rem]" /> */}
                 <Link target='_blank' href={assignmentDetails.url}>
                     <button className="group relative mt-10 inline-flex items-center justify-center overflow-hidden rounded-md px-8 py-3 font-medium tracking-wide text-white text-xl shadow-2xl border border-[rgba(255,255,255,0.5)]  hover:border-slate-100/20 hover:scale-110 transition duration-300 ease-out  hover:shadow-orange-600 active:translate-y-1">
                         <span className="absolute inset-0 bg-gradient-to-r from-orange-400 via-pink-500  to-purple-500 opacity-0  transition duration-300 ease-out  group-hover:opacity-100  group-active:opacity-90"></span>
@@ -265,21 +148,11 @@ const UploadAssignments = () => {
                                         <option disabled value=''>
                                             Select Course
                                         </option>
-                                        <option className='bg-white' value="ug">
-                                            UG
-                                        </option>
-                                        <option className=" bg-white" value="pg">
-                                            PG
-                                        </option>
-                                        <option className=" bg-white" value="vocational">
-                                            Vocational Courses
-                                        </option>
-                                        <option className=" bg-white" value="core">
-                                            Core Courses
-                                        </option>
-                                        <option className=" bg-white" value="open">
-                                            Open Electives
-                                        </option>
+                                        {courseOptions.map((option, index) => (
+                                            <option key={index} value={option.value} className="bg-white">
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </select>
                                     <select
                                         onChange={handleInputChange}
@@ -290,30 +163,11 @@ const UploadAssignments = () => {
                                         defaultValue=''
                                     >
                                         <option disabled value=''>Select Semester</option>
-                                        <option className='bg-white' value="1">
-                                            Semester 1
-                                        </option>
-                                        <option className='bg-white' value="2">
-                                            Semester 2
-                                        </option>
-                                        <option className='bg-white' value="3">
-                                            Semester 3
-                                        </option>
-                                        <option className="bg-white" value="4">
-                                            Semester 4
-                                        </option>
-                                        <option className="bg-white" value="5">
-                                            Semester 5
-                                        </option>
-                                        <option className="bg-white" value="6">
-                                            Semester 6
-                                        </option>
-                                        <option className="bg-white" value="7">
-                                            Semester 7
-                                        </option>
-                                        <option className="bg-white" value="8">
-                                            Semester 8
-                                        </option>
+                                        {semesterOptions.map((option, index) => (
+                                            <option key={index} value={option.value} className="bg-white">
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
