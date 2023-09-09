@@ -15,7 +15,7 @@ const AdminPanel = () => {
     const RoleContext = useContext(roleContext);
     const { role } = RoleContext;
 
-    const [activeTab, setActiveTab] = useState('subjects');
+    const [activeTab, setActiveTab] = useState('notes');
 
     const checkVerification = async () => {
         if (role.role === 'student') {
