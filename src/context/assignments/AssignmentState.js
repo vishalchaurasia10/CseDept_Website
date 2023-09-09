@@ -9,6 +9,7 @@ const AssignmentState = (props) => {
     const [assignment, setAssignment] = useState([])
     const LoadingContext = useContext(loadingContext);
     const { setLoading } = LoadingContext;
+    const failure = (message) => toast.error(message, { duration: 3000 });
 
     const uploadAssignmentFile = async (file, assignmentDetails, setAssignmentDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester) => {
         try {

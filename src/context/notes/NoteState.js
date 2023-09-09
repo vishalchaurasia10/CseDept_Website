@@ -1,13 +1,114 @@
 import { useContext, useState } from "react";
 import NoteContext from "./noteContext";
-import { Client, Databases, Query, Storage } from "appwrite";
+import { Client, Databases, ID, Query, Storage } from "appwrite";
 import loadingContext from "../loading/loadingContext";
+import { Toaster, toast } from "react-hot-toast";
 
 const NoteState = (props) => {
 
     const [notes, setNotes] = useState([])
     const LoadingContext = useContext(loadingContext);
     const { setLoading } = LoadingContext;
+    const failure = (message) => toast.error(message, { duration: 3000 });
+
+    const uploadNoteFile = async (file, notesDetails, setNotesDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester) => {
+        try {
+            setLoading(true);
+
+            setNotesDetails((prevDetails) => ({
+                ...prevDetails,
+                extension: '.' + file.name.split('.').pop()
+            }));
+
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1')
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+            const storage = new Storage(client);
+
+            const result = await storage.createFile(
+                process.env.NEXT_PUBLIC_NOTES_BUCKET_ID,
+                ID.unique(),
+                file
+            );
+
+            const fileId = result.$id;
+            const uploadedFile = storage.getFileView(
+                process.env.NEXT_PUBLIC_NOTES_BUCKET_ID,
+                fileId
+            );
+
+            toast.promise(
+                Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Document successfully uploaded!',
+                    error: () => 'Error uploading document.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+
+            setNotesDetails((prevDetails) => ({
+                ...prevDetails,
+                url: uploadedFile.href,
+            }));
+
+            uploadNoteDocument(uploadedFile.href, '.' + file.name.split('.').pop(), notesDetails, setNotesDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester);
+            setLoading(false);
+        } catch (error) {
+            failure(error.message);
+            setLoading(false);
+        }
+    }
+
+    const uploadNoteDocument = async (url, extension, notesDetails, setNotesDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester) => {
+        try {
+            const client = new Client()
+                .setEndpoint('https://cloud.appwrite.io/v1')
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
+
+            const databases = new Databases(client);
+
+            const result = await databases.createDocument(
+                process.env.NEXT_PUBLIC_DATABASE_ID,
+                process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID,
+                ID.unique(),
+                {
+                    name: notesDetails.name,
+                    subject: notesDetails.subject,
+                    subjectCode: notesDetails.subjectCode,
+                    unit: notesDetails.unit,
+                    semester: selectedSemester,
+                    url: url,
+                    extension: extension,
+                    course: selectedCourse
+                },
+            );
+
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Notes successfully uploaded!',
+                    error: () => 'Error uploading notes.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+
+        } catch (error) {
+            failure('Something went wrong');
+        }
+
+        setSelectedCourse('');
+        setSelectedSemester('');
+        setNotesDetails({
+            name: '',
+            subject: '',
+            subjectCode: '',
+            unit: '',
+            url: null,
+            extension: ''
+        });
+    }
 
     const fetchNotes = async () => {
         try {
@@ -99,9 +200,12 @@ const NoteState = (props) => {
     }
 
     return (
-        <NoteContext.Provider value={{ notes, setNotes, fetchNotes, fetchSemestersNotes, deleteNote }}>
-            {props.children}
-        </NoteContext.Provider>
+        <>
+            <Toaster />
+            <NoteContext.Provider value={{ notes, setNotes, fetchNotes, fetchSemestersNotes, deleteNote, uploadNoteFile }}>
+                {props.children}
+            </NoteContext.Provider>
+        </>
     )
 }
 

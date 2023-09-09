@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Client, Databases, Storage, ID, Query } from 'appwrite';
 import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
 import Link from 'next/link';
+import commonContext from '@/context/CommonStates/commonContex';
+import noteContext from '@/context/notes/noteContext';
+import { courseOptions, semesterOptions } from '@/utils/constants';
 
 const failure = (message) => toast.error(message, { duration: 3000 });
 const failureLong = (message) => toast.error(message, { duration: 3000, style: { minWidth: '380px' } });
 
 const UploadNotes = () => {
     const [loading, setLoading] = useState(false);
+    const { fetchSubjects, subjects } = useContext(commonContext);
+    const { uploadNoteFile } = useContext(noteContext);
     const [selectedCourse, setSelectedCourse] = useState('');
     const [selectedSemester, setSelectedSemester] = useState('');
     const [selectedSubject, setSelectedSubject] = useState({ subjectCode: '', subject: '' });
-    const [subjects, setSubjects] = useState([{ subjectCode: '', subjectName: '' }]); // [ { subjectCode: '', subjectName: '' }
     const [lab, setLab] = useState(false);
     const [notesDetails, setNotesDetails] = useState({
         name: '',
@@ -23,36 +27,9 @@ const UploadNotes = () => {
         extension: '',
     });
 
-    const fetchSubjects = async () => {
-        try {
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-
-            const databases = new Databases(client);
-
-            const result = await databases.listDocuments(
-                process.env.NEXT_PUBLIC_DATABASE_ID,
-                process.env.NEXT_PUBLIC_SUBJECTS_COLLECTION_ID,
-                [Query.equal('semester', selectedSemester), Query.equal('course', selectedCourse)]
-            );
-
-            if (result.total === 0) {
-                setSubjects([{ subjectCode: '', subjectName: '' }]);
-                failure('Ask Admin to upload the subjects first');
-                return;
-            } else {
-                setSubjects(JSON.parse(result.documents[0].subjects));
-            }
-        } catch (error) {
-            console.log(error);
-            failure('Ask Admin to upload the subjects first');
-        }
-    }
-
     useEffect(() => {
         if (selectedSemester !== '' && selectedCourse !== '') {
-            fetchSubjects();
+            fetchSubjects(selectedSemester, selectedCourse);
         }
     }, [selectedSemester, selectedCourse]);
 
@@ -86,54 +63,9 @@ const UploadNotes = () => {
             return
         }
 
-        try {
-            setLoading(true);
-
-            setNotesDetails((prevDetails) => ({
-                ...prevDetails,
-                extension: '.' + file.name.split('.').pop()
-            }));
-
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-            const storage = new Storage(client);
-
-            const result = await storage.createFile(
-                process.env.NEXT_PUBLIC_NOTES_BUCKET_ID,
-                ID.unique(),
-                file
-            );
-
-            const fileId = result.$id;
-            const uploadedFile = storage.getFileView(
-                process.env.NEXT_PUBLIC_NOTES_BUCKET_ID,
-                fileId
-            );
-
-            toast.promise(
-                Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
-                {
-                    success: () => 'Document successfully uploaded!',
-                    error: () => 'Error uploading document.',
-                    duration: 3000,
-                    position: 'top-center',
-                }
-            );
-
-            setNotesDetails((prevDetails) => ({
-                ...prevDetails,
-                url: uploadedFile.href,
-            }));
-
-
-            fileInput.value = null; // Clear the file input value after successful upload
-            handleInputSubmit(uploadedFile.href, '.' + file.name.split('.').pop());
-            setLoading(false);
-        } catch (error) {
-            failure('Something went wrong');
-            setLoading(false);
-        }
+        uploadNoteFile(file, notesDetails, setNotesDetails, selectedCourse, setSelectedCourse, selectedSemester, setSelectedSemester);
+        fileInput.value = null;
+        setSelectedSubject({ subjectCode: '', subject: '' });
     };
 
     const handleInputChange = (e) => {
@@ -168,58 +100,6 @@ const UploadNotes = () => {
                 subject
             }));
         }
-    };
-
-    const handleInputSubmit = async (url, extension) => {
-        try {
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-
-            const databases = new Databases(client);
-
-            const result = await databases.createDocument(
-                process.env.NEXT_PUBLIC_DATABASE_ID,
-                process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID,
-                ID.unique(),
-                {
-                    name: notesDetails.name,
-                    subject: notesDetails.subject,
-                    subjectCode: notesDetails.subjectCode,
-                    unit: notesDetails.unit,
-                    semester: selectedSemester,
-                    url: url,
-                    extension: extension,
-                    course: selectedCourse
-                },
-            );
-
-            toast.promise(
-                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
-                {
-                    success: () => 'Notes successfully uploaded!',
-                    error: () => 'Error uploading notes.',
-                    duration: 3000,
-                    position: 'top-center',
-                }
-            );
-
-        } catch (error) {
-            failure('Something went wrong');
-        }
-
-        setSelectedCourse('');
-        setSelectedSemester('');
-        setSelectedSubject({ subjectCode: '', subject: '' });
-        setSubjects([{ subjectCode: '', subjectName: '' }]);
-        setNotesDetails({
-            name: '',
-            subject: '',
-            subjectCode: '',
-            unit: '',
-            url: null,
-            extension: ''
-        });
     };
 
     const renderFileUpload = () => {
@@ -277,21 +157,15 @@ const UploadNotes = () => {
                                         <option disabled value=''>
                                             Select Course
                                         </option>
-                                        <option className='bg-white' value="ug">
-                                            UG
-                                        </option>
-                                        <option className=" bg-white" value="pg">
-                                            PG
-                                        </option>
-                                        <option className=" bg-white" value="vocational">
-                                            Vocational Courses
-                                        </option>
-                                        <option className=" bg-white" value="core">
-                                            Core Courses
-                                        </option>
-                                        <option className=" bg-white" value="open">
-                                            Open Electives
-                                        </option>
+                                        {courseOptions.map((option, index) => (
+                                            <option
+                                                key={index} // Use a unique key for each option element
+                                                value={option.value}
+                                                className="bg-white"
+                                            >
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </select>
                                     <select
                                         onChange={handleInputChange}
@@ -304,30 +178,11 @@ const UploadNotes = () => {
                                         <option disabled value=''>
                                             Select Semester
                                         </option>
-                                        <option className='bg-white' value="1">
-                                            Semester 1
-                                        </option>
-                                        <option className='bg-white' value="2">
-                                            Semester 2
-                                        </option>
-                                        <option className='bg-white' value="3">
-                                            Semester 3
-                                        </option>
-                                        <option className="bg-white" value="4">
-                                            Semester 4
-                                        </option>
-                                        <option className="bg-white" value="5">
-                                            Semester 5
-                                        </option>
-                                        <option className="bg-white" value="6">
-                                            Semester 6
-                                        </option>
-                                        <option className="bg-white" value="7">
-                                            Semester 7
-                                        </option>
-                                        <option className="bg-white" value="8">
-                                            Semester 8
-                                        </option>
+                                        {semesterOptions.map((option, index) => (
+                                            <option key={index} value={option.value} className="bg-white">
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
