@@ -152,3 +152,16 @@ export const semesterOptions = [
         label: 'Semester 8',
     },
 ];
+
+export const linkFields = [
+    {
+        name: 'topic',
+        type: 'text',
+        placeholder: 'Enter the topic of the link',
+    },
+    {
+        name: 'url',
+        type: 'text',
+        placeholder: 'Enter the link',
+    },
+];
