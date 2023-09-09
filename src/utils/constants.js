@@ -165,3 +165,16 @@ export const linkFields = [
         placeholder: 'Enter the link',
     },
 ];
+
+export const timeTableFields = [
+    {
+        name: 'semester',
+        type: 'number',
+        placeholder: 'Enter the semester number',
+    },
+    {
+        name: 'section',
+        type: 'text',
+        placeholder: 'Enter the section',
+    },
+];

@@ -3,6 +3,7 @@ import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa';
 import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
 import { Client, Databases, ID, Query } from 'appwrite';
+import { courseOptions } from '@/utils/constants';
 
 const failure = (message) => toast.error(message, { duration: 3000 });
 
@@ -237,21 +238,15 @@ const UploadSubjects = () => {
                                         <option disabled value=''>
                                             Select Course
                                         </option>
-                                        <option className='bg-white' value="ug">
-                                            UG
-                                        </option>
-                                        <option className=" bg-white" value="pg">
-                                            PG
-                                        </option>
-                                        <option className=" bg-white" value="vocational">
-                                            Vocational Courses
-                                        </option>
-                                        <option className=" bg-white" value="core">
-                                            Core Courses
-                                        </option>
-                                        <option className=" bg-white" value="open">
-                                            Open Electives
-                                        </option>
+                                        {courseOptions.map((option, index) => (
+                                            <option
+                                                key={index} // Use a unique key for each option element
+                                                value={option.value}
+                                                className="bg-white"
+                                            >
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </select>
                                     <input
                                         onChange={(event) => handleInputChange(event)}
@@ -357,4 +352,3 @@ const UploadSubjects = () => {
 };
 
 export default UploadSubjects;
-// {"subjectCode":"FAFL(CS44)","subjectName":"Formal Automata and Finite Language"},{"subjectCode":"NTPM(CS41)","subjectName":"Numerical Technique and Probability Measurement"},{"subjectCode":"DAA(CS45)","subjectName":"Design Analysis and Algorithm"}

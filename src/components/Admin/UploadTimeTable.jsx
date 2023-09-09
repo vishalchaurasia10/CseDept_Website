@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
-import { Client, Databases, Storage, ID } from 'appwrite';
+import React, { useContext, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
 import Link from 'next/link';
+import timetableContext from '@/context/timetable/timetableContext';
+import { timeTableFields } from '@/utils/constants';
 
 const failure = (message) => toast.error(message, { duration: 3000 });
-const failureLong = (message) => toast.error(message, { duration: 3000, style: { minWidth: '380px' } });
 
 const UploadTimeTable = () => {
     const [loading, setLoading] = useState(false);
-    const [timeTableDetails, settimeTableDetails] = useState({
+    const { uploadTimeTableFile } = useContext(timetableContext);
+    const [timeTableDetails, setTimeTableDetails] = useState({
         semester: '',
         section: '',
         url: null,
     });
 
-    const handleFileUpload = async (e) => {
+    const manageUpload = async (e) => {
 
         const fileInput = document.getElementById('timeTableFile');
         const file = fileInput.files[0];
@@ -26,95 +27,17 @@ const UploadTimeTable = () => {
             return;
         }
 
-        try {
-            setLoading(true);
+        uploadTimeTableFile(file, timeTableDetails, setTimeTableDetails)
+        fileInput.value = null;
 
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-            const storage = new Storage(client);
-
-            const result = await storage.createFile(
-                process.env.NEXT_PUBLIC_TIMETABLE_BUCKET_ID,
-                ID.unique(),
-                file
-            );
-
-            const fileId = result.$id;
-            const uploadedFile = storage.getFileView(
-                process.env.NEXT_PUBLIC_TIMETABLE_BUCKET_ID,
-                fileId
-            );
-            settimeTableDetails((prevDetails) => ({
-                ...prevDetails,
-                url: uploadedFile.href,
-            }));
-
-            toast.promise(
-                Promise.resolve(fileId), // Use `Promise.resolve` to create a resolved promise with the fileId
-                {
-                    success: () => 'File successfully uploaded!',
-                    error: () => 'Error uploading timetable.',
-                    duration: 3000,
-                    position: 'top-center',
-                }
-            );
-
-            fileInput.value = null; // Clear the file input value after successful upload
-            handleTimeTableInputSubmit(uploadedFile.href);
-            setLoading(false);
-        } catch (error) {
-            failure(error.message);
-            setLoading(false);
-        }
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        settimeTableDetails((prevDetails) => ({
+        setTimeTableDetails((prevDetails) => ({
             ...prevDetails,
             [name]: value
         }));
-    };
-
-    const handleTimeTableInputSubmit = async (url) => {
-        try {
-            const client = new Client()
-                .setEndpoint('https://cloud.appwrite.io/v1')
-                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID);
-
-            const databases = new Databases(client);
-
-            const result = await databases.createDocument(
-                process.env.NEXT_PUBLIC_DATABASE_ID,
-                process.env.NEXT_PUBLIC_TIMETABLE_COLLECTION_ID,
-                ID.unique(),
-                {
-                    semester: timeTableDetails.semester,
-                    section: timeTableDetails.section,
-                    url: url,
-                },
-            );
-
-            toast.promise(
-                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
-                {
-                    success: () => 'TimeTable successfully uploaded!',
-                    error: () => 'Error uploading TimeTable.',
-                    duration: 3000,
-                    position: 'top-center',
-                }
-            );
-
-        } catch (error) {
-            failure('Something went wrong');
-        }
-
-        settimeTableDetails({
-            semester: '',
-            section: '',
-            url: null,
-        });
     };
 
     const renderFileUpload = () => {
@@ -125,7 +48,7 @@ const UploadTimeTable = () => {
                         <Image className=" h-full w-full cursor-pointer" src="/images/timetable.svg" width={200} height={200} alt='Upload Image' />
                         {loading && <Image className='relative mx-auto mb-4 lg:mb-0 h-10 w-10' src='https://samherbert.net/svg-loaders/svg-loaders/three-dots.svg' width={500} height={500} alt='clip' />}
                         {/* <FaCloudUploadAlt className="text-[#F02D65] -mt-20 text-[15rem] cursor-pointer" /> */}
-                        <input onChange={handleFileUpload} className="hidden" type="file" name="timeTableFile" id="timeTableFile" />
+                        <input onChange={manageUpload} className="hidden" type="file" name="timeTableFile" id="timeTableFile" />
                     </label>
                     <button className='text-white text-sm mb-2'>Click on above image to upload file</button>
                 </>
@@ -160,27 +83,19 @@ const UploadTimeTable = () => {
                                 <h1 className=" text-5xl lg:text-7xl font-jost">Upload TimeTable</h1>
                             </div>
                             <form>
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="number"
-                                    name="semester"
-                                    id="semester"
-                                    value={timeTableDetails.semester}
-                                    placeholder="Enter the semester number"
-                                />
-
-                                <input
-                                    onChange={handleInputChange}
-                                    required
-                                    className="p-4 my-2  rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
-                                    type="text"
-                                    name="section"
-                                    id="section"
-                                    value={timeTableDetails.section}
-                                    placeholder="Enter the section"
-                                />
+                                {timeTableFields.map((field, index) => (
+                                    <input
+                                        key={index} // Use a unique key for each input element
+                                        onChange={handleInputChange}
+                                        required
+                                        className="p-4 my-2 rounded-lg w-full shadow shadow-black outline-none bg-[#b2b4b6] placeholder:text-[#262626] border border-white"
+                                        type={field.type}
+                                        name={field.name}
+                                        id={field.name}
+                                        value={timeTableDetails[field.name]}
+                                        placeholder={field.placeholder}
+                                    />
+                                ))}
                             </form>
                         </div>
                         <div className="fileUpload bg-[#262626] text-center rounded-2xl shadow-2xl shadow-black order-1 lg:order-2 m-5 lg:w-[40%]">
