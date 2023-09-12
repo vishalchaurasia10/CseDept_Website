@@ -137,6 +137,15 @@ const AnnouncementState = (props) => {
             if (fileId) {
                 await deleteFile(fileId);
             }
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Announcement successfully deleted!',
+                    error: () => 'Error deleting announcement.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
             fetchAnnouncements();
             return result;
         } catch (error) {

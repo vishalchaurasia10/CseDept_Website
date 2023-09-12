@@ -38,7 +38,7 @@ const Importantlink = () => {
     }, [])
 
     const deleteCard = async (id, fileId) => {
-        const result = await deleteImportantlink(id, fileId);
+        await deleteImportantlink(id, fileId);
         handleHideModal();
     }
 
@@ -61,7 +61,6 @@ const Importantlink = () => {
         const handleKeyDown = (event) => {
             if (event.key === 'Escape') {
                 setShowModal(false);
-                document.body.classList.remove('overflow-hidden');
             }
         };
 

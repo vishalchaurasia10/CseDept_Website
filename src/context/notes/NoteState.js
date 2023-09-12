@@ -192,10 +192,19 @@ const NoteState = (props) => {
             const result = await databases.deleteDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID, id);
 
             await deleteFile(fileId);
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Note successfully deleted!',
+                    error: () => 'Error deleting note.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
             fetchNotes();
             return result;
         } catch (error) {
-            console.log(error);
+            toast.error(error.message)
         }
     }
 
