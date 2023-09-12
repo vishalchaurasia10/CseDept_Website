@@ -6,7 +6,7 @@ const DeleteComponent = ({ handleHideModal, showModal, removeCard, $id, url }) =
     return (
         <>
             <div className={`modalWrapper ${showModal ? '' : 'hidden'} bg-[rgba(0,0,0,0.8)] font-jost z-50 fixed top-0 -left-2 w-screen h-screen flex items-center justify-center`}>
-                <dialog id='modal' className="modal bg-[#3e3e3f] fixed z-50 p-6 px-8 mx-4 md:mx-auto lg:px-10 rounded-2xl shadow-2xl shadow-black text-white">
+                <div id='modal' className="modal bg-[#3e3e3f] fixed z-50 p-6 px-8 mx-4 md:mx-auto lg:px-10 rounded-2xl shadow-2xl shadow-black text-white">
                     <form className="">
                         <header className="modal-header py-3 flex items-center justify-between">
                             <div className="excalmation flex space-x-2 items-center">
@@ -25,7 +25,7 @@ const DeleteComponent = ({ handleHideModal, showModal, removeCard, $id, url }) =
                             </div>
                         </div>
                     </form>
-                </dialog>
+                </div>
             </div>
         </>
     )

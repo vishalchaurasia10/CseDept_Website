@@ -49,13 +49,11 @@ const Importantlink = () => {
 
     const handleShowModal = ($id, url) => {
         setShowModal(true);
-        modal.showModal();
         setDeleteItem({ $id, url });
     }
 
     const handleHideModal = () => {
         setShowModal(false);
-        modal.close();
         setDeleteItem({ $id: '', url: '' });
     }
 
@@ -119,7 +117,7 @@ const Importantlink = () => {
                                         {role.role === 'admin' ? <div className="delete relative">
                                             <FaTrash title='Delete' onClick={() => handleShowModal($id, url)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-0 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
                                         </div> : ''}
-                                        <DeleteComponent handleHideModal={handleHideModal} showModal={showModal} removeCard={removeImportantLink} $id={deleteItem.$id} url={deleteItem.url} />
+                                        {showModal && <DeleteComponent handleHideModal={handleHideModal} showModal={showModal} removeCard={removeImportantLink} $id={deleteItem.$id} url={deleteItem.url} />}
 
                                     </div>
                                 )
