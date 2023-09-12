@@ -208,10 +208,35 @@ const NoteState = (props) => {
         }
     }
 
+    const updateNoteDocument = async (id, newData) => {
+        try {
+            const client = new Client();
+            const databases = new Databases(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            const result = await databases.updateDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID, id, newData);
+
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Note successfully updated!',
+                    error: () => 'Error updating timetable.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+            fetchNotes();
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
     return (
         <>
             <Toaster />
-            <NoteContext.Provider value={{ notes, setNotes, fetchNotes, fetchSemestersNotes, deleteNote, uploadNoteFile }}>
+            <NoteContext.Provider value={{ notes, setNotes, fetchNotes, fetchSemestersNotes, deleteNote, uploadNoteFile, updateNoteDocument }}>
                 {props.children}
             </NoteContext.Provider>
         </>

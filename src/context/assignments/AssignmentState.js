@@ -200,11 +200,36 @@ const AssignmentState = (props) => {
         }
     }
 
+    const updateAssignmentDocument = async (id, newData) => {
+        try {
+            const client = new Client();
+            const databases = new Databases(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            const result = await databases.updateDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_ASSIGNMENTS_COLLECTION_ID, id, newData);
+
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Assignment successfully updated!',
+                    error: () => 'Error updating timetable.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+            fetchAssignment();
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
 
     return (
         <>
             <Toaster />
-            <AssignmentContext.Provider value={{ assignment, setAssignment, fetchAssignment, fetchSemestersAssignments, deleteAssignment, uploadAssignmentFile }}>
+            <AssignmentContext.Provider value={{ assignment, setAssignment, fetchAssignment, fetchSemestersAssignments, deleteAssignment, uploadAssignmentFile, updateAssignmentDocument }}>
                 {props.children}
             </AssignmentContext.Provider>
         </>

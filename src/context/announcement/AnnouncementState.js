@@ -153,10 +153,35 @@ const AnnouncementState = (props) => {
         }
     }
 
+    const updateAnnouncementDocument = async (id, newData) => {
+        try {
+            const client = new Client();
+            const databases = new Databases(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            const result = await databases.updateDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_ANNOUNCEMENTS_COLLECTION_ID, id, newData);
+
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Announcement successfully updated!',
+                    error: () => 'Error updating timetable.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+            fetchAnnouncements();
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
     return (
         <>
             <Toaster />
-            <AnnouncementContext.Provider value={{ announcements, setAnnouncement, fetchAnnouncements, deleteAnnouncement, uploadAnnouncementFile, uploadAnnouncementDocument }}>
+            <AnnouncementContext.Provider value={{ announcements, setAnnouncement, fetchAnnouncements, deleteAnnouncement, uploadAnnouncementFile, uploadAnnouncementDocument, updateAnnouncementDocument }}>
                 {props.children}
             </AnnouncementContext.Provider>
         </>

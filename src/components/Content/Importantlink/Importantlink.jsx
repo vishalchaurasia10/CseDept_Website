@@ -6,17 +6,20 @@ import loadingContext from '@/context/loading/loadingContext';
 import roleContext from '@/context/role/roleContext';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FaTrash } from 'react-icons/fa';
+import { FaPen, FaTrash } from 'react-icons/fa';
 import Loader from '@/components/Layout/Loader';
 import DeleteComponent from '@/components/Layout/DeleteComponent';
 import { convertStringToDateTime, extractFileId } from '@/utils/commonFunctions';
+import UpdateComponent from '@/components/Layout/UpdateComponent';
 
 const Importantlink = () => {
 
     const [showModal, setShowModal] = useState(false);
+    const [updateId, setUpdateId] = useState('');
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [deleteItem, setDeleteItem] = useState({ $id: '', url: '' });
     const ImportantlinkContext = useContext(importantlinkContext);
-    const { importantlink, fetchImportantlink, deleteImportantlink } = ImportantlinkContext;
+    const { importantlink, fetchImportantlink, deleteImportantlink, updateImportantlinkDocument } = ImportantlinkContext;
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
     const RoleContext = useContext(roleContext);
@@ -55,6 +58,21 @@ const Importantlink = () => {
     const handleHideModal = () => {
         setShowModal(false);
         setDeleteItem({ $id: '', url: '' });
+    }
+
+    const handleShowUpdateModal = ($id) => {
+        setShowUpdateModal(true);
+        setUpdateId($id)
+    }
+
+    const handleHideUpdateModal = () => {
+        setShowUpdateModal(false);
+        setUpdateId('');
+    }
+
+    const updateImportantLink = async (id, formData) => {
+        await updateImportantlinkDocument(id, formData);
+        handleHideUpdateModal();
     }
 
     useEffect(() => {
@@ -113,6 +131,12 @@ const Importantlink = () => {
                                                     </Link>
                                                 </div>}
                                         </div>
+                                        {role.role === 'admin' ? <div className="update relative">
+                                            <FaPen title='Delete' onClick={() => handleShowUpdateModal($id)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-10 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
+                                        </div> : ''}
+                                        {
+                                            showUpdateModal && <UpdateComponent data={{ topic }} handleHideUpdateModal={handleHideUpdateModal} updateFunction={updateImportantLink} $id={updateId} />
+                                        }
                                         {role.role === 'admin' ? <div className="delete relative">
                                             <FaTrash title='Delete' onClick={() => handleShowModal($id, url)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-0 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
                                         </div> : ''}

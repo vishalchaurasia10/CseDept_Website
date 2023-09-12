@@ -148,10 +148,35 @@ const ImportantlinkState = (props) => {
         }
     }
 
+    const updateImportantlinkDocument = async (id, newData) => {
+        try {
+            const client = new Client();
+            const databases = new Databases(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            const result = await databases.updateDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_IMPORTANTLINKS_COLLECTION_ID, id, newData);
+
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Link successfully updated!',
+                    error: () => 'Error updating Link.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+            fetchImportantlink();
+        } catch (error) {
+            failure(error.message);
+        }
+    }
+
     return (
         <>
             <Toaster />
-            <ImportantlinkContext.Provider value={{ importantlink, setImportantlink, fetchImportantlink, deleteImportantlink, uploadImportantFile, uploadImportantDocument }}>
+            <ImportantlinkContext.Provider value={{ importantlink, setImportantlink, fetchImportantlink, deleteImportantlink, uploadImportantFile, uploadImportantDocument, updateImportantlinkDocument }}>
                 {props.children}
             </ImportantlinkContext.Provider>
         </>
