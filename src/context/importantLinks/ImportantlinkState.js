@@ -100,7 +100,7 @@ const ImportantlinkState = (props) => {
             setImportantlink(result.documents.reverse());
             setLoading(false);
         } catch (error) {
-            console.log(error);
+            toast.error(error.message);
             setLoading(false);
         }
     }
@@ -132,6 +132,15 @@ const ImportantlinkState = (props) => {
 
             if (fileId !== null)
                 await deleteImportantFile(fileId);
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Link successfully deleted!',
+                    error: () => 'Error deleting link.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
             fetchImportantlink();
             return result;
         } catch (error) {
