@@ -6,17 +6,20 @@ import loadingContext from '@/context/loading/loadingContext';
 import roleContext from '@/context/role/roleContext';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FaTrash } from 'react-icons/fa';
+import { FaPen, FaTrash } from 'react-icons/fa';
 import Loader from '@/components/Layout/Loader';
 import { convertStringToDateTime, extractFileId } from '@/utils/commonFunctions';
 import DeleteComponent from '@/components/Layout/DeleteComponent';
+import UpdateComponent from '@/components/Layout/UpdateComponent';
 
 const TimeTable = () => {
 
-    const [showModal, setShowModal] = React.useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [updateId, setUpdateId] = useState('');
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [deleteItem, setDeleteItem] = useState({ $id: '', url: '' });
     const TimetableContext = useContext(timetableContext);
-    const { timetable, fetchTimeTable, deleteTimetable } = TimetableContext;
+    const { timetable, fetchTimeTable, deleteTimetable, updateTimeTableDocument } = TimetableContext;
     const LoadingContext = useContext(loadingContext);
     const { loading } = LoadingContext;
     const RoleContext = useContext(roleContext);
@@ -54,6 +57,21 @@ const TimeTable = () => {
     const handleHideModal = () => {
         setShowModal(false);
         setDeleteItem({ $id: '', url: '' });
+    }
+
+    const handleShowUpdateModal = ($id) => {
+        setShowUpdateModal(true);
+        setUpdateId($id)
+    }
+
+    const handleHideUpdateModal = () => {
+        setShowUpdateModal(false);
+        setUpdateId('');
+    }
+
+    const updateTimeTable = async (id, formData) => {
+        await updateTimeTableDocument(id, formData);
+        handleHideUpdateModal();
     }
 
     useEffect(() => {
@@ -94,11 +112,11 @@ const TimeTable = () => {
                                 const { semester, $id, url, section, $updatedAt } = item;
                                 const dateTime = convertStringToDateTime($updatedAt);
                                 return (
-                                    <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-2 lg:mx-5 space-x-4 flex justify-center w-full md:w-[47%] lg:w-[30%]">
-                                        <Link className='w-1/4 lg:w-1/2 flex items-center justify-center mr-4 lg:mr-0' target='_blank' href={`${url}`}>
+                                    <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-2 lg:mx-5 flex justify-center w-full md:w-[47%] lg:w-[30%]">
+                                        <Link className='w-1/4 lg:w-1/2 flex items-center justify-center mr-4' target='_blank' href={`${url}`}>
                                             <Image title='Click to view' className='cursor-pointer  mb-3 lg:w-52 hover:scale-105 transition-all duration-300' src={`/images/calender.svg`} width={300} height={300} alt='subjectFolder' />
                                         </Link>
-                                        <div className="details w-3/4 lg:w-full flex flex-col justify-center">
+                                        <div className="details w-3/4 ml-2 lg:w-full flex flex-col justify-center">
                                             <div className="updateDetails text-xs flex my-1 ">
                                                 <p className='font-bold whitespace-nowrap'>Updated At :&nbsp;</p>
                                                 <p className='whitespace-nowrap'>
@@ -120,6 +138,12 @@ const TimeTable = () => {
                                                 </Link>
                                             </div>}
                                         </div>
+                                        {role.role === 'admin' ? <div className="update relative">
+                                            <FaPen title='Delete' onClick={() => handleShowUpdateModal($id)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-10 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
+                                        </div> : ''}
+                                        {
+                                            showUpdateModal && <UpdateComponent data={{ semester, section }} handleHideUpdateModal={handleHideUpdateModal} updateFunction={updateTimeTable} $id={updateId} />
+                                        }
                                         {role.role === 'admin' ? <div className="delete relative">
                                             <FaTrash title='Delete' onClick={() => handleShowModal($id, url)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-0 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
                                         </div> : ''}

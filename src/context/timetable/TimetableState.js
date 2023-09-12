@@ -153,10 +153,35 @@ const TimetableState = (props) => {
         }
     }
 
+    const updateTimeTableDocument = async (id, newData) => {
+        try {
+            const client = new Client();
+            const databases = new Databases(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            const result = await databases.updateDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_TIMETABLE_COLLECTION_ID, id, newData);
+
+            toast.promise(
+                Promise.resolve(result), // Use `Promise.resolve` to create a resolved promise with the fileId
+                {
+                    success: () => 'Timetable successfully updated!',
+                    error: () => 'Error updating timetable.',
+                    duration: 3000,
+                    position: 'top-center',
+                }
+            );
+            fetchTimeTable();
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
     return (
         <>
             <Toaster />
-            <TimetableContext.Provider value={{ timetable, setTimetable, fetchTimeTable, deleteTimetable, uploadTimeTableFile }}>
+            <TimetableContext.Provider value={{ timetable, setTimetable, fetchTimeTable, deleteTimetable, uploadTimeTableFile, updateTimeTableDocument }}>
                 {props.children}
             </TimetableContext.Provider>
         </>

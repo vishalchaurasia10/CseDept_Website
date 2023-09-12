@@ -96,7 +96,7 @@ const Importantlink = () => {
                                 const dateTime = convertStringToDateTime($updatedAt);
                                 const truncatedTopic = topic.length > 18 ? `${topic.substring(0, 18)}...` : topic;
                                 return (
-                                    <div key={$id} className="bg-[#D7D9DD] w-full shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex ">
+                                    <div key={$id} className="bg-[#D7D9DD] w-full shadow-2xl shadow-black p-4 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] flex ">
                                         <div className="details w-full flex flex-col justify-center">
                                             <div className="updateDetails text-xs flex my-1 ">
                                                 <p className='font-bold whitespace-nowrap'>Updated At :&nbsp;</p>

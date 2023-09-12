@@ -101,11 +101,11 @@ const TimeTable = () => {
                 const fileUrl = url === null ? imgUrl : url;
                 const truncatedDescription = description.length > 10 ? `${description.substring(0, 10)}...` : description; // Truncate name if it exceeds 20 characters
                 return (
-                  <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] space-x-2 flex justify-center">
+                  <div key={$id} className="semester bg-[#D7D9DD] shadow-2xl shadow-black p-5 rounded-2xl mb-6 mx-2 lg:mx-4 md:w-[45%] lg:w-[30%] flex justify-center">
                     <Link className="w-1/2 flex items-center justify-center lg:mr-0" target="_blank" href={`${imgUrl}`}>
                       <Image title="Click to view" className="cursor-pointer h-full rounded-2xl hover:scale-105 transition-all duration-300" src={`${imgUrl}`} width={300} height={300} alt="" />
                     </Link>
-                    <div className="details lg:w-3/4 flex flex-col justify-center">
+                    <div className="details ml-2 lg:w-3/4 flex flex-col justify-center">
                       <div className="updateDetails whitespace-nowrap text-xs flex my-1">
                         <p className="font-bold">Updated At:&nbsp;</p>
                         <p className="whitespace-nowrap">
