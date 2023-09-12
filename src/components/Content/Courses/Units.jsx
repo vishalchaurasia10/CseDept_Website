@@ -167,7 +167,7 @@ const Units = () => {
                     transition={{ duration: 0.5 }}
                 >
                     <div className="heading text-left w-full" >
-                        <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold">{(subjectUnits[0].unit).includes('unit') ? 'Units' : 'Labs'}</h1>
+                        <h1 className="text-5xl lg:text-7xl pb-8 mx-4  font-jost font-extrabold capitalize">{(subjectUnits[0].unit).includes('unit') ? 'Units' : 'Labs'}</h1>
                     </div>
                     <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                         {subjectUnits.map((item) => {
@@ -178,7 +178,7 @@ const Units = () => {
                                         <Image className="cursor-pointer w-36 lg:w-44 hover:scale-105 transition-all duration-300" src="/images/folder.svg" width={300} height={300} alt="subjectFolder" />
                                     </Link>
                                     <Link href={`/courses/${course}/${semester}/${subject}/${unit}`}>
-                                        <h2 className="text-xl py-2 font-jost">{unit}</h2>
+                                        <h2 className="text-xl py-2 font-jost capitalize">{unit}</h2>
                                     </Link>
                                 </div>
                             );
