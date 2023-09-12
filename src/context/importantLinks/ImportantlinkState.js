@@ -97,7 +97,7 @@ const ImportantlinkState = (props) => {
 
             const result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_IMPORTANTLINKS_COLLECTION_ID,);
 
-            setImportantlink(result.documents);
+            setImportantlink(result.documents.reverse());
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -105,7 +105,22 @@ const ImportantlinkState = (props) => {
         }
     }
 
-    const deleteImportantlink = async (id) => {
+
+    const deleteImportantFile = async (fileId) => {
+        try {
+            const client = new Client();
+            const storage = new Storage(client);
+            client
+                .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint   
+                .setProject(process.env.NEXT_PUBLIC_PROJECT_ID) // Your project ID
+
+            await storage.deleteFile(process.env.NEXT_PUBLIC_LINKS_BUCKET_ID, fileId);
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
+    const deleteImportantlink = async (id, fileId) => {
         try {
             const client = new Client();
             const databases = new Databases(client);
@@ -115,10 +130,12 @@ const ImportantlinkState = (props) => {
 
             const result = await databases.deleteDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_IMPORTANTLINKS_COLLECTION_ID, id);
 
+            if (fileId !== null)
+                await deleteImportantFile(fileId);
             fetchImportantlink();
             return result;
         } catch (error) {
-            console.log(error);
+            toast.error(error.message);
         }
     }
 
