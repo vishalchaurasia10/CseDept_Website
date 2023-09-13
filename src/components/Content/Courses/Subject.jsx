@@ -8,6 +8,7 @@ import assignmentContext from '@/context/assignments/assignmentContext';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Loader from '@/components/Layout/Loader';
+import { truncateString } from '@/utils/commonFunctions';
 
 const Subject = () => {
     const [data, setData] = useState({ subjects: [], assignments: [] });
@@ -114,7 +115,7 @@ const Subject = () => {
                     </div>
                     <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                         {data.subjects.map((item) => {
-                            const { subjectCode, $id } = item;
+                            const { subjectCode,subject, $id } = item;
                             return (
                                 <div key={$id} className="subject mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
                                     <Link href={`/courses/${course}/${semester}/${subjectCode}`}>
@@ -127,7 +128,7 @@ const Subject = () => {
                                         />
                                     </Link>
                                     <Link href={`/courses/${course}/${semester}/${subjectCode}`}>
-                                        <h2 className=" text-xl py-2 font-jost">{subjectCode}</h2>
+                                        <h2 title={subject} className="text-lg py-2 font-jost">{truncateString(subject,15)}</h2>
                                     </Link>
                                 </div>
                             );
@@ -157,7 +158,8 @@ const Subject = () => {
                     </div>
                     <div className="wrapper flex flex-wrap lg:w-full justify-around lg:justify-normal items-center">
                         {data.assignments.map((item) => {
-                            const { subjectCode, $id } = item;
+                            const { subjectCode, subject, $id } = item;
+                            console.log(item);
                             return (
                                 <div key={$id} className="assignments mb-6 mx-2 lg:mx-5 flex flex-col justify-center items-center">
                                     <Link href={`/courses/${course}/${semester}/${subjectCode}`}>
@@ -170,7 +172,7 @@ const Subject = () => {
                                         />
                                     </Link>
                                     <Link href={`/courses/${course}/${semester}/${subjectCode}`}>
-                                        <h2 className=" text-xl py-2 font-jost">{subjectCode}</h2>
+                                        <h2 title={subject} className=" text-lg py-2 font-jost">{truncateString(subject,15)}</h2>
                                     </Link>
                                 </div>
                             );

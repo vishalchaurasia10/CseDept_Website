@@ -34,3 +34,11 @@ export function convertStringToDateTime(dateTimeString) {
 
     return { date: formattedDate, time: formattedTime };
 }
+
+export function truncateString(inputString, maxLength = 20) {
+    if (inputString.length <= maxLength) {
+        return inputString;
+    } else {
+        return inputString.substring(0, maxLength) + '...';
+    }
+}
