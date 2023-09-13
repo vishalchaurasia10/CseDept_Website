@@ -109,7 +109,7 @@ const Navbar = () => {
 
                 <div className="left w-1/2 lg:w-full ">
                     <Link href='/'>
-                        <Image className='relative top-1 scale-110 lg:top-0 lg:scale-100' src='/images/logo.png' width={200} height={200} alt='msrit_logo' />
+                        <Image className='relative h-[2.7rem] md:h-[4.3rem] lg: top-1 scale-110 lg:top-0 lg:scale-100' src='/images/logo.png' width={200} height={200} alt='msrit_logo' />
                     </Link>
                 </div>
 
