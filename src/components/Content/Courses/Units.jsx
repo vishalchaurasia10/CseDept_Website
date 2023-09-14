@@ -241,10 +241,10 @@ const Units = () => {
                                             </div>
                                         )}
                                         {targetSemester > 0 && (
-                                            <div title={`Semester ${targetSemester}`} className="codeDetails flex items-center">
-                                                <div className="flex items-center justify-center">
+                                            <div title={`Semester ${targetSemester}`} className="codeDetails">
+                                                <div className="flex items-center">
                                                     <p className="font-bold">Semester:&nbsp;</p>
-                                                    <p className="mt-[0.1rem]">{targetSemester} |&nbsp;</p>
+                                                    <p className="">{targetSemester}</p>
                                                 </div>
                                                 {url && (
                                                     <div title={`Download ${name}`} className="codeDetails flex">
@@ -257,7 +257,7 @@ const Units = () => {
                                         )}
                                     </div>
                                     {role.role === 'admin' ? <div className="update relative">
-                                        <FaPen title='Delete' onClick={() => handleShowUpdateModal($id)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-10 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
+                                        <FaPen title='Update' onClick={() => handleShowUpdateModal($id)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-10 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
                                     </div> : ''}
                                     {
                                         showUpdateModal && <UpdateComponent data={{ name, subjectCode }} handleHideUpdateModal={handleHideUpdateModal} updateFunction={updateAssignment} $id={updateId} />

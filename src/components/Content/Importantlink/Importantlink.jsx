@@ -132,7 +132,7 @@ const Importantlink = () => {
                                                 </div>}
                                         </div>
                                         {role.role === 'admin' ? <div className="update relative">
-                                            <FaPen title='Delete' onClick={() => handleShowUpdateModal($id)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-10 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
+                                            <FaPen title='Update' onClick={() => handleShowUpdateModal($id)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-10 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
                                         </div> : ''}
                                         {
                                             showUpdateModal && <UpdateComponent data={{ topic }} handleHideUpdateModal={handleHideUpdateModal} updateFunction={updateImportantLink} $id={updateId} />

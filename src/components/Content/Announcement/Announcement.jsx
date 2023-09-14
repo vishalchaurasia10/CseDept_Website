@@ -176,13 +176,13 @@ const TimeTable = () => {
                       )}
                     </div>
                     {role.role === 'admin' ? <div className="update relative">
-                      <FaPen title='Delete' onClick={() => handleShowUpdateModal($id)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-10 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
+                      <FaPen title='Update' onClick={() => handleShowUpdateModal($id)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-10 -bottom-2 hover:scale-110 transition-all duration-300 cursor-pointer" />
                     </div> : ''}
                     {
                       showUpdateModal && <UpdateComponent data={{ description, title, venue }} handleHideUpdateModal={handleHideUpdateModal} updateFunction={updateAnnouncement} $id={updateId} />
                     }
                     {role.role === 'admin' ? <div className="delete relative">
-                      <FaTrash title='Delete' onClick={() => handleShowModal($id, url)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-0 bottom-0 hover:scale-110 transition-all duration-300 cursor-pointer" />
+                      <FaTrash title='Delete' onClick={() => handleShowModal($id, url)} className="text-3xl bg-pureWhite p-[0.38rem] rounded-md absolute right-0 -bottom-2 hover:scale-110 transition-all duration-300 cursor-pointer" />
                     </div> : ''}
                     {showModal && <DeleteComponent handleHideModal={handleHideModal} showModal={showModal} removeCard={removeAnnouncement} $id={deleteItem.$id} url={deleteItem.url} />}
                   </div>
