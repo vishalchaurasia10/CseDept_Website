@@ -141,12 +141,16 @@ const NoteState = (props) => {
 
             if (semester === -1 && subjectCode === -1 && unit === -1) {
 
-                result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID,);
+                result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID, [Query.limit(50),
+                Query.offset(0)
+                ]);
 
             } else if (subjectCode === -1 && unit === -1) {
 
                 query1 = Query.equal('semester', `${semester}`)
-                result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID, [query1]);
+                result = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID, [query1, Query.limit(50),
+                    Query.offset(0)
+                ]);
 
             } else if (subjectCode !== -1 && unit === -1) {
 
@@ -154,7 +158,10 @@ const NoteState = (props) => {
                     process.env.NEXT_PUBLIC_DATABASE_ID,
                     process.env.NEXT_PUBLIC_NOTES_COLLECTION_ID,
                     [
-                        Query.equal('subjectCode', [`${subjectCode}`])
+                        Query.equal('subjectCode', [`${subjectCode}`]),
+                        Query.limit(50),
+                        Query.offset(0)
+
                     ]);
 
             }
